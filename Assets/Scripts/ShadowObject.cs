@@ -18,10 +18,15 @@ public class ShadowObject : MonoBehaviour
 
     [SerializeField] private Vector3 extrusionDirection = Vector3.zero;
 
+    [SerializeField]
     private Vector3[] objectVertices;
+    [SerializeField]
+    private int[] objectTris;
 
     private Mesh shadowColliderMesh;
     private MeshCollider shadowCollider;
+    private MeshFilter shadowColliderFilter;
+    [SerializeField] private Material shadowMaterial;
 
     private Vector3 previousPosition;
     private Quaternion previousRotation;
@@ -33,13 +38,13 @@ public class ShadowObject : MonoBehaviour
 
     private void Awake()
     {
+        shadowColliderMesh = new Mesh { name="Generated shadow"};
         InitializeShadowCollider();
 
         lightType = lightTransform.GetComponent<Light>().type;
 
         objectVertices = transform.GetComponent<MeshFilter>().mesh.vertices.Distinct().ToArray();
-
-        shadowColliderMesh = new Mesh();
+        objectTris = transform.GetComponent<MeshFilter>().mesh.triangles;
     }
 
     private void Update()
@@ -67,11 +72,18 @@ public class ShadowObject : MonoBehaviour
         shadowCollider = shadowGameObject.AddComponent<MeshCollider>();
         shadowCollider.convex = true;
         shadowCollider.isTrigger = true;
+
+        // Add the mesh filter
+        shadowColliderFilter = shadowGameObject.AddComponent<MeshFilter>();
+        shadowColliderFilter.sharedMesh = shadowColliderMesh;
+        MeshRenderer shadowRender = shadowGameObject.AddComponent<MeshRenderer>();
+        shadowRender.material = shadowMaterial;
     }
 
     private void UpdateShadowCollider()
     {
         shadowColliderMesh.vertices = ComputeShadowColliderMeshVertices();
+        shadowColliderMesh.triangles = ComputeShadowColliderMeshTriangles();
         shadowCollider.sharedMesh = shadowColliderMesh;
         canUpdateCollider = true;
     }
@@ -98,7 +110,30 @@ public class ShadowObject : MonoBehaviour
             points[n + i] = ComputeExtrusionPoint(point, points[i]);
         }
 
+        // sort by x, then z, then y
+        points = points.OrderBy(x => x.y)
+                        .ThenByDescending(x => x.x)
+                        .ThenByDescending(x => x.z).ToArray();
+
         return points;
+    }
+
+    private int[] ComputeShadowColliderMeshTriangles()
+    {
+        // the first half of the vertices are on the floor.
+        // the second half oteh vertices are extruded upwards
+        int[] triangles = new int[objectTris.Length];
+        for(int i = 0; i< triangles.Length / 6; i++)
+        {
+            triangles[i * 6 + 0] = i * 2;
+            triangles[i * 6 + 1] = i * 2 + 1;
+            triangles[i * 6 + 2] = i * 2 + 2;
+
+            triangles[i * 6 + 3] = i * 2 + 2;
+            triangles[i * 6 + 4] = i * 2 + 1;
+            triangles[i * 6 + 5] = i * 2 + 3;
+        }
+        return triangles;
     }
 
     private Vector3 ComputeIntersectionPoint(Vector3 fromPosition, Vector3 direction)
