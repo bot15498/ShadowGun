@@ -64,7 +64,9 @@ public class ShadowObject : MonoBehaviour
     {
         GameObject shadowGameObject = shadowTransform.gameObject;
         //shadowGameObject.hideFlags = HideFlags.HideInHierarchy; //OPTIONNAL
-        shadowCollider = shadowGameObject.AddComponent<MeshCollider>();
+        shadowCollider = shadowGameObject.GetComponent<MeshCollider>();
+        if (!shadowCollider)
+            shadowCollider = shadowGameObject.AddComponent<MeshCollider>();
         shadowCollider.convex = true;
         shadowCollider.isTrigger = true;
     }

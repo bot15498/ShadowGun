@@ -13,11 +13,11 @@ public class DummyController : MonoBehaviour
     private bool isReversing = false;
     private float currOffset = 0.0f;
 
-    private void Start() {
+    private void Awake() {
         Init();
     }
 
-    void Update() {
+    private void Update() {
         UpdatePos();
     }
 
