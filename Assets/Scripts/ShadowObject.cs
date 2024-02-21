@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
-// source — [TUTORIAL] Interactive Shadows in Unity                                      //
+// source ï¿½ [TUTORIAL] Interactive Shadows in Unity                                      //
 // https://www.youtube.com/watch?v=3MnA8lYQ_P0                                           //
 // https://github.com/PixTrick/InteractiveShadowTutorial/blob/main/InteractiveShadows.cs //
 ///////////////////////////////////////////////////////////////////////////////////////////
