@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
-// source — [TUTORIAL] Interactive Shadows in Unity                                      //
+// source ï¿½ [TUTORIAL] Interactive Shadows in Unity                                      //
 // https://www.youtube.com/watch?v=3MnA8lYQ_P0                                           //
 // https://github.com/PixTrick/InteractiveShadowTutorial/blob/main/InteractiveShadows.cs //
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -17,11 +17,17 @@ public class ShadowObject : MonoBehaviour
     [SerializeField] private LayerMask targetLayerMask;
 
     [SerializeField] private Vector3 extrusionDirection = Vector3.zero;
+    [SerializeField] private float extrusion = 0.1f;
 
+    [SerializeField]
     private Vector3[] objectVertices;
+    [SerializeField]
+    private int[] objectTris;
 
     private Mesh shadowColliderMesh;
     private MeshCollider shadowCollider;
+    private MeshFilter shadowColliderFilter;
+    [SerializeField] private Material shadowMaterial;
 
     private Vector3 previousPosition;
     private Quaternion previousRotation;
@@ -33,13 +39,13 @@ public class ShadowObject : MonoBehaviour
 
     private void Awake()
     {
+        shadowColliderMesh = new Mesh { name="Generated shadow"};
         InitializeShadowCollider();
 
         lightType = lightTransform.GetComponent<Light>().type;
 
-        objectVertices = transform.GetComponent<MeshFilter>().mesh.vertices.Distinct().ToArray();
-
-        shadowColliderMesh = new Mesh();
+        objectVertices = transform.GetComponent<MeshFilter>().mesh.vertices;
+        objectTris = transform.GetComponent<MeshFilter>().mesh.triangles;
     }
 
     private void Update()
@@ -64,14 +70,23 @@ public class ShadowObject : MonoBehaviour
     {
         GameObject shadowGameObject = shadowTransform.gameObject;
         //shadowGameObject.hideFlags = HideFlags.HideInHierarchy; //OPTIONNAL
-        shadowCollider = shadowGameObject.AddComponent<MeshCollider>();
-        shadowCollider.convex = true;
-        shadowCollider.isTrigger = true;
+        shadowCollider = shadowGameObject.GetComponent<MeshCollider>();
+        if (!shadowCollider)
+            shadowCollider = shadowGameObject.AddComponent<MeshCollider>();
+        shadowCollider.convex = false;
+        shadowCollider.isTrigger = false;
+
+        // Add the mesh filter
+        shadowColliderFilter = shadowGameObject.AddComponent<MeshFilter>();
+        shadowColliderFilter.sharedMesh = shadowColliderMesh;
+        MeshRenderer shadowRender = shadowGameObject.AddComponent<MeshRenderer>();
+        shadowRender.material = shadowMaterial;
     }
 
     private void UpdateShadowCollider()
     {
-        shadowColliderMesh.vertices = ComputeShadowColliderMeshVertices();
+        shadowColliderMesh.vertices = ComputeShadowColliderMeshVertices2();
+        shadowColliderMesh.triangles = objectTris;
         shadowCollider.sharedMesh = shadowColliderMesh;
         canUpdateCollider = true;
     }
@@ -98,7 +113,53 @@ public class ShadowObject : MonoBehaviour
             points[n + i] = ComputeExtrusionPoint(point, points[i]);
         }
 
+        // sort by x, then z, then y
+        points = points.OrderBy(x => x.y)
+                        .ThenByDescending(x => x.x)
+                        .ThenByDescending(x => x.z).ToArray();
+
         return points;
+    }
+
+    private Vector3[] ComputeShadowColliderMeshVertices2()
+    {
+        Vector3[] points = new Vector3[objectVertices.Length];
+
+        Vector3 raycastDirection = lightTransform.forward;
+
+        int n = objectVertices.Length;
+
+        for (int i = 0; i < n; i++)
+        {
+            Vector3 point = transform.TransformPoint(objectVertices[i]);
+
+            if (lightType != LightType.Directional)
+            {
+                raycastDirection = point - lightTransform.position;
+            }
+
+            points[i] = ComputeIntersectionAndExtrusion(point, raycastDirection, extrusion);
+        }
+
+        return points;
+    }
+
+    private int[] ComputeShadowColliderMeshTriangles()
+    {
+        // the first half of the vertices are on the floor.
+        // the second half oteh vertices are extruded upwards
+        int[] triangles = new int[objectTris.Length];
+        for(int i = 0; i< triangles.Length / 6; i++)
+        {
+            triangles[i * 6 + 0] = i * 2;
+            triangles[i * 6 + 1] = i * 2 + 1;
+            triangles[i * 6 + 2] = i * 2 + 2;
+
+            triangles[i * 6 + 3] = i * 2 + 2;
+            triangles[i * 6 + 4] = i * 2 + 1;
+            triangles[i * 6 + 5] = i * 2 + 3;
+        }
+        return triangles;
     }
 
     private Vector3 ComputeIntersectionPoint(Vector3 fromPosition, Vector3 direction)
@@ -108,6 +169,20 @@ public class ShadowObject : MonoBehaviour
         if (Physics.Raycast(fromPosition, direction, out hit, Mathf.Infinity, targetLayerMask))
         {
             return hit.point - transform.position;
+        }
+
+        return fromPosition + 100 * direction - transform.position;
+    }
+
+    private Vector3 ComputeIntersectionAndExtrusion(Vector3 fromPosition, Vector3 direction, float offset)
+    {
+        // Use the hit detection information on where to extrude
+        RaycastHit hit;
+
+        if (Physics.Raycast(fromPosition, direction, out hit, Mathf.Infinity, targetLayerMask))
+        {
+
+            return hit.point - transform.position + hit.normal * offset;
         }
 
         return fromPosition + 100 * direction - transform.position;
@@ -126,5 +201,15 @@ public class ShadowObject : MonoBehaviour
     private bool TransformHasChanged()
     {
         return previousPosition != transform.position || previousRotation != transform.rotation || previousScale != transform.localScale;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        foreach(Vector3 vert in shadowColliderMesh.vertices)
+        {
+            Vector3 worldpos = shadowTransform.TransformPoint(vert);
+            Gizmos.DrawCube(worldpos, Vector3.one * 0.01f);
+        }
     }
 }
