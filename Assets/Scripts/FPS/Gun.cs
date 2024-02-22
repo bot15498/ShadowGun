@@ -17,6 +17,7 @@ public class Gun : MonoBehaviour
     bool isreloading;
     bool canfire;
     public TextMeshProUGUI ammotext;
+    public Animator anim;
 
 
     void Start()
@@ -36,13 +37,25 @@ public class Gun : MonoBehaviour
         {
             Instantiate(bullet, gunBarrel.position, gunBarrel.rotation);
             ammocount -= 1;
+            
+            
             canfire = false;
 
         }
+        if(Input.GetKey(KeyCode.Mouse0) && ammocount >0 && isreloading == false)
+        {
+            anim.Play("Fire");
+        }
+        else if(isreloading == false)
+        {
+            anim.Play("Idle");
+        }
+
+
         if(ammocount == 0 || (Input.GetKeyDown(KeyCode.R)&& ammocount != ammocountMax))
         {
-            Debug.Log("reload");
 
+            anim.Play("reload");
             isreloading = true;
             
         }
