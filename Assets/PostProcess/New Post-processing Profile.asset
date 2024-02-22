@@ -183,19 +183,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3f6f3f7c722b4544b97e3c75840aa33, type: 3}
   m_Name: AutoExposure
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   enabled:
     overrideState: 1
     value: 1
   filtering:
-    overrideState: 0
+    overrideState: 1
     value: {x: 54, y: 99}
   minLuminance:
-    overrideState: 0
-    value: 1.8
+    overrideState: 1
+    value: 0.2
   maxLuminance:
-    overrideState: 0
-    value: 5.3
+    overrideState: 1
+    value: 9
   keyValue:
     overrideState: 0
     value: 2

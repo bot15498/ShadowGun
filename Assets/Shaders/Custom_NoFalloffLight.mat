@@ -34,9 +34,9 @@ Material:
     m_Ints: []
     m_Floats:
     - _BumpScale: 1
-    - _PointThreshold: 0.5
-    - _ShadowSoftness: 0.6
-    - _Threshold: 1
+    - _PointThreshold: 0.43
+    - _ShadowSoftness: 0.5
+    - _Threshold: 0
     m_Colors:
     - _Color: {r: 0.8301887, g: 0.4268423, b: 0.4268423, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
