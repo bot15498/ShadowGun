@@ -17,6 +17,7 @@ public class ShadowObject : MonoBehaviour
     [SerializeField] private LayerMask targetLayerMask;
 
     [SerializeField] private Vector3 extrusionDirection = Vector3.zero;
+    [SerializeField] private float extrusion = 0.1f;
 
     [SerializeField]
     private Vector3[] objectVertices;
@@ -43,7 +44,7 @@ public class ShadowObject : MonoBehaviour
 
         lightType = lightTransform.GetComponent<Light>().type;
 
-        objectVertices = transform.GetComponent<MeshFilter>().mesh.vertices.Distinct().ToArray();
+        objectVertices = transform.GetComponent<MeshFilter>().mesh.vertices;
         objectTris = transform.GetComponent<MeshFilter>().mesh.triangles;
     }
 
@@ -72,8 +73,8 @@ public class ShadowObject : MonoBehaviour
         shadowCollider = shadowGameObject.GetComponent<MeshCollider>();
         if (!shadowCollider)
             shadowCollider = shadowGameObject.AddComponent<MeshCollider>();
-        shadowCollider.convex = true;
-        shadowCollider.isTrigger = true;
+        shadowCollider.convex = false;
+        shadowCollider.isTrigger = false;
 
         // Add the mesh filter
         shadowColliderFilter = shadowGameObject.AddComponent<MeshFilter>();
@@ -84,8 +85,8 @@ public class ShadowObject : MonoBehaviour
 
     private void UpdateShadowCollider()
     {
-        shadowColliderMesh.vertices = ComputeShadowColliderMeshVertices();
-        shadowColliderMesh.triangles = ComputeShadowColliderMeshTriangles();
+        shadowColliderMesh.vertices = ComputeShadowColliderMeshVertices2();
+        shadowColliderMesh.triangles = objectTris;
         shadowCollider.sharedMesh = shadowColliderMesh;
         canUpdateCollider = true;
     }
@@ -120,6 +121,29 @@ public class ShadowObject : MonoBehaviour
         return points;
     }
 
+    private Vector3[] ComputeShadowColliderMeshVertices2()
+    {
+        Vector3[] points = new Vector3[objectVertices.Length];
+
+        Vector3 raycastDirection = lightTransform.forward;
+
+        int n = objectVertices.Length;
+
+        for (int i = 0; i < n; i++)
+        {
+            Vector3 point = transform.TransformPoint(objectVertices[i]);
+
+            if (lightType != LightType.Directional)
+            {
+                raycastDirection = point - lightTransform.position;
+            }
+
+            points[i] = ComputeIntersectionAndExtrusion(point, raycastDirection, extrusion);
+        }
+
+        return points;
+    }
+
     private int[] ComputeShadowColliderMeshTriangles()
     {
         // the first half of the vertices are on the floor.
@@ -150,6 +174,20 @@ public class ShadowObject : MonoBehaviour
         return fromPosition + 100 * direction - transform.position;
     }
 
+    private Vector3 ComputeIntersectionAndExtrusion(Vector3 fromPosition, Vector3 direction, float offset)
+    {
+        // Use the hit detection information on where to extrude
+        RaycastHit hit;
+
+        if (Physics.Raycast(fromPosition, direction, out hit, Mathf.Infinity, targetLayerMask))
+        {
+
+            return hit.point - transform.position + hit.normal * offset;
+        }
+
+        return fromPosition + 100 * direction - transform.position;
+    }
+
     private Vector3 ComputeExtrusionPoint(Vector3 objectVertexPosition, Vector3 shadowPointPosition)
     {
         if (extrusionDirection.sqrMagnitude == 0)
@@ -163,5 +201,15 @@ public class ShadowObject : MonoBehaviour
     private bool TransformHasChanged()
     {
         return previousPosition != transform.position || previousRotation != transform.rotation || previousScale != transform.localScale;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        foreach(Vector3 vert in shadowColliderMesh.vertices)
+        {
+            Vector3 worldpos = shadowTransform.TransformPoint(vert);
+            Gizmos.DrawCube(worldpos, Vector3.one * 0.01f);
+        }
     }
 }
