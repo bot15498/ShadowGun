@@ -6,59 +6,110 @@
 
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
+using System;
+using UnityEngine.UI;
+using System.Collections;
+
+[Serializable]
+public class ShadowHolder
+{
+    public Mesh shadowColliderMesh;
+    public MeshCollider shadowCollider;
+    public MeshFilter shadowColliderFilter;
+    public Transform shadowTransform;
+    public bool canUpdateCollider =true;
+}
+
 
 public class ShadowObject : MonoBehaviour
 {
-    [SerializeField] private Transform shadowTransform;
-
-    [SerializeField] private Transform lightTransform;
-    private LightType lightType;
+    // I love essentially global static variables!!!!!!!!!!!!
+    private static List<LightObserver> lights = null;
+    private static List<ShadowObject> shadowObjects = null;
 
     [SerializeField] private LayerMask targetLayerMask;
-
-    [SerializeField] private Vector3 extrusionDirection = Vector3.zero;
     [SerializeField] private float extrusion = 0.1f;
 
-    [SerializeField]
-    private Vector3[] objectVertices;
-    [SerializeField]
-    private int[] objectTris;
-
-    private Mesh shadowColliderMesh;
-    private MeshCollider shadowCollider;
-    private MeshFilter shadowColliderFilter;
+    [SerializeField] private Dictionary<LightObserver, ShadowHolder> shadowMap = new Dictionary<LightObserver, ShadowHolder>();
+    [SerializeField] private List<ShadowHolder> shadowList = new List<ShadowHolder>();
     [SerializeField] private Material shadowMaterial;
 
+    // Information about this object's mesh
+    [SerializeField] private Vector3[] objectVertices;
+    [SerializeField] private int[] objectTris;
+
+    // variables to detect if the object has moved or not, which is then use to update shadows 
     private Vector3 previousPosition;
     private Quaternion previousRotation;
     private Vector3 previousScale;
 
-    private bool canUpdateCollider = true;
+    [SerializeField][Range(0.02f, 1f)] private float shadowColliderUpdateTime = 0.08f;
 
-    [SerializeField] [Range(0.02f, 1f)] private float shadowColliderUpdateTime = 0.08f;
+    public static void AddLight(LightObserver toad)
+    {
+        lights.Add(toad);
+    }
+
+    public static void DeleteLight(LightObserver ded)
+    {
+        lights.Remove(ded);
+        foreach(ShadowObject obj in shadowObjects)
+        {
+            obj.DeleteShadow(ded);
+        }
+    }
 
     private void Awake()
     {
-        shadowColliderMesh = new Mesh { name="Generated shadow"};
-        InitializeShadowCollider();
+        // create the list of lights for all shadows to use if it doesn't exist. 
+        if (lights == null)
+        {
+            lights = new List<LightObserver>();
+        }
+        if (shadowObjects == null)
+        {
+            shadowObjects = new List<ShadowObject>();
+        }
 
-        lightType = lightTransform.GetComponent<Light>().type;
-
+        // Save information about this object's mesh for shadow rendering. 
         objectVertices = transform.GetComponent<MeshFilter>().mesh.vertices;
         objectTris = transform.GetComponent<MeshFilter>().mesh.triangles;
+
+        shadowObjects.Add(this);
     }
 
     private void Update()
     {
-        shadowTransform.position = transform.position;
+        foreach(ShadowHolder shadow in shadowMap.Values)
+        {
+            shadow.shadowTransform.position = transform.position;
+        }
     }
 
     private void FixedUpdate()
     {
-        if (TransformHasChanged() && canUpdateCollider)
+        // prestore if the object has moved or not
+        bool currObjectHasChanged = TransformHasChanged();
+
+        // Check each light
+        foreach (LightObserver light in lights)
         {
-            Invoke("UpdateShadowCollider", shadowColliderUpdateTime);
-            canUpdateCollider = false;
+            ShadowHolder currShadow;
+            if (!shadowMap.TryGetValue(light, out currShadow))
+            {
+                // shadow for this light does not exist. Going to create it now
+                currShadow = InitializeShadowCollider();
+                shadowMap.Add(light, currShadow);
+                shadowList.Add(currShadow);
+            }
+
+            // light exists, deal with if it has moved or not
+            if (currShadow.canUpdateCollider && (currObjectHasChanged || light.TransformHasChanged()))
+            {
+                StartCoroutine(UpdateShadowCollider(light, currShadow, shadowColliderUpdateTime));
+                currShadow.canUpdateCollider = false;
+            }
         }
 
         previousPosition = transform.position;
@@ -66,66 +117,45 @@ public class ShadowObject : MonoBehaviour
         previousScale = transform.localScale;
     }
 
-    private void InitializeShadowCollider()
+    private ShadowHolder InitializeShadowCollider()
     {
-        GameObject shadowGameObject = shadowTransform.gameObject;
+        ShadowHolder shadow = new ShadowHolder();
+
+        GameObject shadowGameObject = new GameObject($"{gameObject.name} Shadow");
         //shadowGameObject.hideFlags = HideFlags.HideInHierarchy; //OPTIONNAL
-        shadowCollider = shadowGameObject.GetComponent<MeshCollider>();
-        if (!shadowCollider)
-            shadowCollider = shadowGameObject.AddComponent<MeshCollider>();
-        shadowCollider.convex = false;
-        shadowCollider.isTrigger = false;
+        shadow.shadowTransform = shadowGameObject.transform;
+
+        // Add collider
+        shadow.shadowCollider = shadowGameObject.AddComponent<MeshCollider>();
+        shadow.shadowCollider.convex = false;
+        shadow.shadowCollider.isTrigger = false;
+
+        // create mesh
+        shadow.shadowColliderMesh = new Mesh { name = $"{gameObject.name} Shadow mesh" };
 
         // Add the mesh filter
-        shadowColliderFilter = shadowGameObject.AddComponent<MeshFilter>();
-        shadowColliderFilter.sharedMesh = shadowColliderMesh;
+        shadow.shadowColliderFilter = shadowGameObject.AddComponent<MeshFilter>();
+        shadow.shadowColliderFilter.sharedMesh = shadow.shadowColliderMesh;
         MeshRenderer shadowRender = shadowGameObject.AddComponent<MeshRenderer>();
         shadowRender.material = shadowMaterial;
+
+        return shadow;
     }
 
-    private void UpdateShadowCollider()
+    private IEnumerator UpdateShadowCollider(LightObserver light, ShadowHolder shadow, float delay)
     {
-        shadowColliderMesh.vertices = ComputeShadowColliderMeshVertices2();
-        shadowColliderMesh.triangles = objectTris;
-        shadowCollider.sharedMesh = shadowColliderMesh;
-        canUpdateCollider = true;
+        yield return new WaitForSeconds(delay);
+        shadow.shadowColliderMesh.vertices = ComputeShadowColliderMeshVertices(light);
+        shadow.shadowColliderMesh.triangles = objectTris;
+        shadow.shadowCollider.sharedMesh = shadow.shadowColliderMesh;
+        shadow.canUpdateCollider = true;
     }
 
-    private Vector3[] ComputeShadowColliderMeshVertices()
-    {
-        Vector3[] points = new Vector3[2 * objectVertices.Length];
-
-        Vector3 raycastDirection = lightTransform.forward;
-
-        int n = objectVertices.Length;
-
-        for (int i = 0; i < n; i++)
-        {
-            Vector3 point = transform.TransformPoint(objectVertices[i]);
-
-            if (lightType != LightType.Directional)
-            {
-                raycastDirection = point - lightTransform.position;
-            }
-
-            points[i] = ComputeIntersectionPoint(point, raycastDirection);
-
-            points[n + i] = ComputeExtrusionPoint(point, points[i]);
-        }
-
-        // sort by x, then z, then y
-        points = points.OrderBy(x => x.y)
-                        .ThenByDescending(x => x.x)
-                        .ThenByDescending(x => x.z).ToArray();
-
-        return points;
-    }
-
-    private Vector3[] ComputeShadowColliderMeshVertices2()
+    private Vector3[] ComputeShadowColliderMeshVertices(LightObserver light)
     {
         Vector3[] points = new Vector3[objectVertices.Length];
 
-        Vector3 raycastDirection = lightTransform.forward;
+        Vector3 raycastDirection = light.transform.forward;
 
         int n = objectVertices.Length;
 
@@ -133,45 +163,15 @@ public class ShadowObject : MonoBehaviour
         {
             Vector3 point = transform.TransformPoint(objectVertices[i]);
 
-            if (lightType != LightType.Directional)
+            if (light.lightType != LightType.Directional)
             {
-                raycastDirection = point - lightTransform.position;
+                raycastDirection = point - light.transform.position;
             }
 
             points[i] = ComputeIntersectionAndExtrusion(point, raycastDirection, extrusion);
         }
 
         return points;
-    }
-
-    private int[] ComputeShadowColliderMeshTriangles()
-    {
-        // the first half of the vertices are on the floor.
-        // the second half oteh vertices are extruded upwards
-        int[] triangles = new int[objectTris.Length];
-        for(int i = 0; i< triangles.Length / 6; i++)
-        {
-            triangles[i * 6 + 0] = i * 2;
-            triangles[i * 6 + 1] = i * 2 + 1;
-            triangles[i * 6 + 2] = i * 2 + 2;
-
-            triangles[i * 6 + 3] = i * 2 + 2;
-            triangles[i * 6 + 4] = i * 2 + 1;
-            triangles[i * 6 + 5] = i * 2 + 3;
-        }
-        return triangles;
-    }
-
-    private Vector3 ComputeIntersectionPoint(Vector3 fromPosition, Vector3 direction)
-    {
-        RaycastHit hit;
-
-        if (Physics.Raycast(fromPosition, direction, out hit, Mathf.Infinity, targetLayerMask))
-        {
-            return hit.point - transform.position;
-        }
-
-        return fromPosition + 100 * direction - transform.position;
     }
 
     private Vector3 ComputeIntersectionAndExtrusion(Vector3 fromPosition, Vector3 direction, float offset)
@@ -181,21 +181,10 @@ public class ShadowObject : MonoBehaviour
 
         if (Physics.Raycast(fromPosition, direction, out hit, Mathf.Infinity, targetLayerMask))
         {
-
             return hit.point - transform.position + hit.normal * offset;
         }
 
         return fromPosition + 100 * direction - transform.position;
-    }
-
-    private Vector3 ComputeExtrusionPoint(Vector3 objectVertexPosition, Vector3 shadowPointPosition)
-    {
-        if (extrusionDirection.sqrMagnitude == 0)
-        {
-            return objectVertexPosition - transform.position;
-        }
-
-        return shadowPointPosition + extrusionDirection;
     }
 
     private bool TransformHasChanged()
@@ -203,13 +192,39 @@ public class ShadowObject : MonoBehaviour
         return previousPosition != transform.position || previousRotation != transform.rotation || previousScale != transform.localScale;
     }
 
-    private void OnDrawGizmos()
+    public void DeleteShadow(LightObserver light)
     {
-        Gizmos.color = Color.red;
-        foreach(Vector3 vert in shadowColliderMesh.vertices)
-        {
-            Vector3 worldpos = shadowTransform.TransformPoint(vert);
-            Gizmos.DrawCube(worldpos, Vector3.one * 0.01f);
-        }
+        ShadowHolder toDelete = shadowMap[light];
+        shadowMap.Remove(light);
+        Destroy(toDelete.shadowTransform.gameObject);
     }
+
+    //private int[] ComputeShadowColliderMeshTriangles()
+    //{
+    //    // the first half of the vertices are on the floor.
+    //    // the second half oteh vertices are extruded upwards
+    //    int[] triangles = new int[objectTris.Length];
+    //    for (int i = 0; i < triangles.Length / 6; i++)
+    //    {
+    //        triangles[i * 6 + 0] = i * 2;
+    //        triangles[i * 6 + 1] = i * 2 + 1;
+    //        triangles[i * 6 + 2] = i * 2 + 2;
+
+    //        triangles[i * 6 + 3] = i * 2 + 2;
+    //        triangles[i * 6 + 4] = i * 2 + 1;
+    //        triangles[i * 6 + 5] = i * 2 + 3;
+    //    }
+    //    return triangles;
+    //}
+
+
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    foreach (Vector3 vert in shadowColliderMesh.vertices)
+    //    {
+    //        Vector3 worldpos = shadowTransform.TransformPoint(vert);
+    //        Gizmos.DrawCube(worldpos, Vector3.one * 0.01f);
+    //    }
+    //}
 }
