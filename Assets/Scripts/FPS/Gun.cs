@@ -5,6 +5,10 @@ using UnityEngine.UI;
 using TMPro;
 public class Gun : MonoBehaviour
 {
+    // Global events
+    public delegate void OnPlayerFire();
+    public static OnPlayerFire onPlayerFire;
+
     // Start is called before the first frame update
     public Transform gunBarrel;
     public GameObject bullet;
@@ -37,6 +41,7 @@ public class Gun : MonoBehaviour
         {
             Instantiate(bullet, gunBarrel.position, gunBarrel.rotation);
             ammocount -= 1;
+            onPlayerFire?.Invoke();
             
             
             canfire = false;
