@@ -12,7 +12,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     private Vector2 clampInDegrees = new Vector2(360, 180);
     [SerializeField]
-    private Vector2 sensitivity = new Vector2(Settings.sensitivitySettings, Settings.sensitivitySettings);
+    private Vector2 sensitivity; 
     [SerializeField]
     private Vector2 smoothing = new Vector2(3, 3);
     [SerializeField]
@@ -34,6 +34,12 @@ public class CameraMovement : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        if (Settings.sensitivitySettings != 0)
+        {
+            sensitivity = new Vector2(Settings.sensitivitySettings, Settings.sensitivitySettings);
+        }
+
+
         // Allow the script to clamp based on a desired target value.
         var targetOrientation = Quaternion.Euler(targetDirection);
         var targetCharacterOrientation = Quaternion.Euler(targetCharacterDirection);
