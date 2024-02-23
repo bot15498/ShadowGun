@@ -5,6 +5,10 @@ using UnityEngine.UI;
 using TMPro;
 public class Gun : MonoBehaviour
 {
+    // Global events
+    public delegate void OnPlayerFire();
+    public static OnPlayerFire onPlayerFire;
+
     // Start is called before the first frame update
     public Transform gunBarrel;
     public GameObject bullet;
@@ -17,6 +21,8 @@ public class Gun : MonoBehaviour
     bool isreloading;
     bool canfire;
     public TextMeshProUGUI ammotext;
+    public Animator anim;
+    public GameObject reloadText;
 
 
     void Start()
@@ -26,25 +32,47 @@ public class Gun : MonoBehaviour
         fireratetimer = 0;
         isreloading = false;
         canfire = true;
+        reloadText.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if(ammocount <= 5 && isreloading == false)
+        {
+            reloadText.SetActive(true);
+        }
+        
+
         ammotext.text = ammocount.ToString() + "/" + ammocountMax.ToString();
         if (Input.GetKey(KeyCode.Mouse0) && ammocount > 0 && isreloading == false && canfire == true)
         {
             Instantiate(bullet, gunBarrel.position, gunBarrel.rotation);
             ammocount -= 1;
+            onPlayerFire?.Invoke();
+            
+            
             canfire = false;
 
         }
+        if(Input.GetKey(KeyCode.Mouse0) && ammocount >0 && isreloading == false)
+        {
+            anim.Play("Fire");
+        }
+        else if(isreloading == false)
+        {
+            anim.Play("Idle");
+        }
+
+
         if(ammocount == 0 || (Input.GetKeyDown(KeyCode.R)&& ammocount != ammocountMax))
         {
-            Debug.Log("reload");
 
+            anim.Play("reload");
             isreloading = true;
-            
+            reloadText.SetActive(false);
+
         }
         if(isreloading == true)
         {
@@ -55,6 +83,7 @@ public class Gun : MonoBehaviour
         if(timer>= reloadtimer)
         {
             isreloading = false;
+            
             timer = 0;
             ammocount = ammocountMax;
         }

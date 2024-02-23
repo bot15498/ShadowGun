@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Flare : MonoBehaviour
 {
@@ -15,21 +16,35 @@ public class Flare : MonoBehaviour
     bool canflare;
     public float throwforce;
     public float upwardthrowforce;
+    public Image flarefill;
+    public int flarechargemax;
+    int currentflares;
+    public TextMeshProUGUI flarechargetext;
     void Start()
     {
         canflare = true;
         flaretimer = 0;
         cam = gameObject.transform;
+        currentflares = flarechargemax;
     }
 
     // Update is called once per frame
     void Update()
     {
+        flarechargetext.text = currentflares.ToString();
+        if (currentflares < flarechargemax)
+        {
+            flarefill.fillAmount = flaretimer / flarecooldown;
+        }
+        else
+        {
+            flarefill.fillAmount = 1;
+        }
         if (Input.GetKeyDown(KeyCode.G))
         {
-            if(canflare == true)
+            if(currentflares > 0)
             {
-                canflare = false;
+                currentflares -= 1;
 
                 GameObject thrownflare = Instantiate(flare, throwPoint.position, Random.rotation);
 
@@ -42,12 +57,13 @@ public class Flare : MonoBehaviour
             }
         }
 
-        if (canflare == false)
+        if (currentflares < flarechargemax)
         {
             flaretimer += Time.deltaTime;
+
             if(flaretimer >= flarecooldown)
             {
-                canflare = true;
+                currentflares += 1;
                 flaretimer = 0;
             }
         }
