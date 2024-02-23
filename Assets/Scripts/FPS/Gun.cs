@@ -18,6 +18,7 @@ public class Gun : MonoBehaviour
     bool canfire;
     public TextMeshProUGUI ammotext;
     public Animator anim;
+    public GameObject reloadText;
 
 
     void Start()
@@ -27,11 +28,19 @@ public class Gun : MonoBehaviour
         fireratetimer = 0;
         isreloading = false;
         canfire = true;
+        reloadText.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if(ammocount <= 5 && isreloading == false)
+        {
+            reloadText.SetActive(true);
+        }
+        
+
         ammotext.text = ammocount.ToString() + "/" + ammocountMax.ToString();
         if (Input.GetKey(KeyCode.Mouse0) && ammocount > 0 && isreloading == false && canfire == true)
         {
@@ -57,7 +66,8 @@ public class Gun : MonoBehaviour
 
             anim.Play("reload");
             isreloading = true;
-            
+            reloadText.SetActive(false);
+
         }
         if(isreloading == true)
         {
@@ -68,6 +78,7 @@ public class Gun : MonoBehaviour
         if(timer>= reloadtimer)
         {
             isreloading = false;
+            
             timer = 0;
             ammocount = ammocountMax;
         }
