@@ -89,8 +89,8 @@ public class DestroyShadow : MonoBehaviour
                 particleMeshRender.shadowCastingMode = ShadowCastingMode.Off;
                 GO.AddComponent<MeshFilter>().mesh = mesh;
                 BoxCollider particleBoxCollider = GO.AddComponent<BoxCollider>();
-                particleBoxCollider.size = new Vector3(particleBoxCollider.size.x, 0.01f, particleBoxCollider.size.z);
-                Vector3 explosionPos = new Vector3(transform.position.x + Random.Range(-0.5f, 0.5f), transform.position.y + Random.Range(0f, 0.5f), transform.position.z + Random.Range(-0.5f, 0.5f));
+                particleBoxCollider.size = new Vector3(particleBoxCollider.size.x, 0.05f, particleBoxCollider.size.z);
+                Vector3 explosionPos = new Vector3(transform.position.x + Random.Range(-10.5f, 10.5f), transform.position.y + Random.Range(0f, 10.5f), transform.position.z + Random.Range(-10.5f, 10.5f));
                 GO.AddComponent<Rigidbody>().AddExplosionForce(Random.Range(500, 2000), explosionPos, 30);
                 Destroy(GO, 5 + Random.Range(0.0f, 1.0f));
             }
