@@ -19,6 +19,7 @@ public class ShadowHolder
     public MeshCollider shadowCollider;
     public MeshFilter shadowColliderFilter;
     public Transform shadowTransform;
+    public Material shadowMaterialOpaque;
     public bool canUpdateCollider = true;
 }
 
@@ -33,7 +34,9 @@ public class ShadowObject : MonoBehaviour
     [SerializeField] private float extrusion = 0.1f;
 
     public Dictionary<LightObserver, ShadowHolder> shadowMap = new Dictionary<LightObserver, ShadowHolder>();
-    [SerializeField] private Material shadowMaterial;
+    [SerializeField] private Material shadowMaterialNormal;
+    [SerializeField] private Material shadowMaterialOpaque;
+    [SerializeField] private Material enemyMaterialOpaque;
 
     // Information about this object's mesh
     [SerializeField] private Vector3[] objectVertices;
@@ -152,8 +155,19 @@ public class ShadowObject : MonoBehaviour
             }
         }
 
+        // Change material on the enemy mesh renderer, and then fade it out
+        MeshRenderer enemyRenderer = GetComponent<MeshRenderer>();
+        enemyRenderer.material = enemyMaterialOpaque;
+        while (enemyRenderer.material.color.a >= 0)
+        {
+            enemyRenderer.material.color = new Color(enemyRenderer.material.color.r, 
+                                                    enemyRenderer.material.color.g, 
+                                                    enemyRenderer.material.color.b, 
+                                                    enemyRenderer.material.color.a - 0.05f);
+            yield return new WaitForSeconds(0.05f);
+        }
+
         // Wait a bit, then delete the shadow
-        yield return new WaitForSeconds(1.0f);
         Destroy(shadowThatGotHit);
 
         // Destroy self.
@@ -183,8 +197,9 @@ public class ShadowObject : MonoBehaviour
 
         // Mesh renderer
         MeshRenderer shadowRender = shadowGameObject.AddComponent<MeshRenderer>();
-        shadowRender.material = shadowMaterial;
+        shadowRender.material = shadowMaterialNormal;
         shadowRender.shadowCastingMode = ShadowCastingMode.Off;
+        shadow.shadowMaterialOpaque = shadowMaterialOpaque;
 
         // Audio
         AudioSource shadowSound = shadowGameObject.AddComponent<AudioSource>();
@@ -192,7 +207,8 @@ public class ShadowObject : MonoBehaviour
         shadowSound.clip = shadowBreakSounds[UnityEngine.Random.Range(0, shadowBreakSounds.Length - 1)];
 
         // Destroy script
-        shadowGameObject.AddComponent<DestroyShadow>();
+        DestroyShadow shadowScript = shadowGameObject.AddComponent<DestroyShadow>();
+        shadowScript.opaqueMaterial = shadowMaterialOpaque;
 
         shadow.shadowTransform.position = transform.position;
 

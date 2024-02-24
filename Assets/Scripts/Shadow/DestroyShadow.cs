@@ -7,16 +7,18 @@ using UnityEngine.UI;
 
 public class DestroyShadow : MonoBehaviour
 {
+    public Material opaqueMaterial;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public IEnumerator DestroyMesh()
@@ -85,7 +87,7 @@ public class DestroyShadow : MonoBehaviour
                 GO.transform.position = transform.position;
                 GO.transform.rotation = transform.rotation;
                 MeshRenderer particleMeshRender = GO.AddComponent<MeshRenderer>();
-                particleMeshRender.material = materials[submesh];
+                particleMeshRender.material = opaqueMaterial;
                 particleMeshRender.shadowCastingMode = ShadowCastingMode.Off;
                 GO.AddComponent<MeshFilter>().mesh = mesh;
                 BoxCollider particleBoxCollider = GO.AddComponent<BoxCollider>();
@@ -104,4 +106,21 @@ public class DestroyShadow : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         Destroy(gameObject);
     }
+
+    //private IEnumerator DelayedDestroy(GameObject go, float delay)
+    //{
+    //    MeshRenderer shadowParticleRender = go.GetComponent<MeshRenderer>();
+    //    float time = 0f;
+    //    while (time < delay)
+    //    {
+    //        float newAlpha = Mathf.Lerp(1f, 0f, time / delay);
+    //        Material mat = shadowParticleRender.material;
+    //        shadowParticleRender.material.color = new Color()
+
+    //        time += Time.deltaTime;
+    //    }
+
+    //    // Now destroy the game object
+    //    Destroy(go);
+    //}
 }
