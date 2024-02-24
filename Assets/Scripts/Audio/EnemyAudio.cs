@@ -12,7 +12,7 @@ public class EnemyAudio : MonoBehaviour {
     private void Awake() {
         EnemyAiBase.onAlert += (GameObject enemy) => {
             AudioClip clip = alert[Random.Range(0, alert.Length - 1)];
-            StartCoroutine(OneShot("Alert", clip, enemy, 1.0f, 0.5f, 2.0f));
+            StartCoroutine(OneShot("Alert", clip, enemy, 1.0f, 0.8f, 1.4f));
         };
         EnemyHP.onDeath += (GameObject enemy) => {
             AudioClip clip = death[Random.Range(0, alert.Length - 1)];
