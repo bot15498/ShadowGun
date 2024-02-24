@@ -7,15 +7,27 @@ public class PlayerAudio : MonoBehaviour
     private AudioClip gunfire;
 
     private void Awake() {
-        Gun.onPlayerFire += () => StartCoroutine(OneShot("Gunfire", gunfire));
+        Gun.onPlayerFire += () =>
+            StartCoroutine(OneShot("Gunfire", gunfire, 1.0f, 0.95f, 1.05f));
     }
 
-    IEnumerator OneShot(string name, AudioClip clip) {
+    IEnumerator OneShot(
+        string name,
+        AudioClip clip,
+        float vol = 1.0f,
+        float pitchMin = 1.0f,
+        float pitchMax = 1.0f
+    ) {
         GameObject emitter = new() { name = name };
         emitter.transform.position = gameObject.transform.position;
         emitter.transform.parent = gameObject.transform;
         AudioSource src = emitter.AddComponent<AudioSource>();
-        
+        src.playOnAwake = false;
+
+        src.volume = vol;
+        if (pitchMin > 0)
+            src.pitch = Random.Range(pitchMin, pitchMax);
+
         src.PlayOneShot(clip);
         while (src.isPlaying) {
             yield return new WaitForSeconds(.1f);

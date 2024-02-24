@@ -9,6 +9,10 @@ public class DestroyShadow : MonoBehaviour
 {
     public Material opaqueMaterial;
 
+    // Audio events
+    public delegate void OnShatter(GameObject shadow);
+    public static OnShatter onShatter;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -99,7 +103,7 @@ public class DestroyShadow : MonoBehaviour
         }
 
         // Play smash
-        GetComponent<AudioSource>().Play();
+        onShatter?.Invoke(gameObject);
 
         GetComponent<Renderer>().enabled = false;
 
