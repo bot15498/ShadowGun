@@ -18,7 +18,6 @@ public class EnemyAudio : MonoBehaviour {
     IEnumerator OneShot(string name, AudioClip clip, GameObject enemy) {
         GameObject emitter = new() { name = name };
         emitter.transform.position = enemy.transform.position;
-        emitter.transform.parent = enemy.transform;
         AudioSource src = emitter.AddComponent<AudioSource>();
 
         src.PlayOneShot(clip);
