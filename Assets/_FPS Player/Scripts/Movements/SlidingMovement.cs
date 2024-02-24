@@ -9,6 +9,7 @@ public class SlidingMovement : MovementType
 {
     public FloatRange slideSpeed;
     bool controlledSlide;
+    
 
     float slideLimit;
     float slideTime;
@@ -84,6 +85,7 @@ public class SlidingMovement : MovementType
         //Check to slide when running
         if (playerInput.crouch && canSlide())
         {
+            
             player.ChangeStatus(changeTo, IK);
             slideDir = transform.forward;
             movement.controller.height = player.crouchHeight;

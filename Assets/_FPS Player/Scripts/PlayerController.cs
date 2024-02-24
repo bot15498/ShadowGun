@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     float stamina;
 
     public StatusEvent onStatusChange;
+    public GameObject legsUI;
     List<MovementType> movements;
     WallrunMovement wallrun;
     SurfaceSwimmingMovement swimming;
@@ -116,6 +117,14 @@ public class PlayerController : MonoBehaviour
         //Misc
         UpdateLean();
         UpdateCamLevel();
+        if(status == Status.sliding)
+        {
+            legsUI.SetActive(true);
+        }
+        else
+        {
+            legsUI.SetActive(false);
+        }
     }
 
     void UpdateInteraction()

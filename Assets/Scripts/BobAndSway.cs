@@ -29,8 +29,10 @@ public class BobAndSway : MonoBehaviour
     Vector3 bobPosition;
 
     public float bobExaggeration;
+    public float bobExaggerationSprint;
+    public float bobExaggerationWalk;
 
-    [Header("Bob Rotation")]
+   [Header("Bob Rotation")]
     public Vector3 multiplier;
     Vector3 bobEulerRotation;
 
@@ -43,6 +45,15 @@ public class BobAndSway : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            bobExaggeration = bobExaggerationSprint;
+        }
+        else
+        {
+            bobExaggeration = bobExaggerationWalk;
+        }
         GetInput();
 
         Sway();
