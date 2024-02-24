@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Rendering;
 
 [Serializable]
 public class ShadowHolder
@@ -18,7 +19,7 @@ public class ShadowHolder
     public MeshCollider shadowCollider;
     public MeshFilter shadowColliderFilter;
     public Transform shadowTransform;
-    public bool canUpdateCollider =true;
+    public bool canUpdateCollider = true;
 }
 
 
@@ -31,8 +32,7 @@ public class ShadowObject : MonoBehaviour
     [SerializeField] private LayerMask targetLayerMask;
     [SerializeField] private float extrusion = 0.1f;
 
-    [SerializeField] private Dictionary<LightObserver, ShadowHolder> shadowMap = new Dictionary<LightObserver, ShadowHolder>();
-    [SerializeField] private List<ShadowHolder> shadowList = new List<ShadowHolder>();
+    public Dictionary<LightObserver, ShadowHolder> shadowMap = new Dictionary<LightObserver, ShadowHolder>();
     [SerializeField] private Material shadowMaterial;
 
     // Information about this object's mesh
@@ -46,6 +46,8 @@ public class ShadowObject : MonoBehaviour
 
     [SerializeField][Range(0.02f, 1f)] private float shadowColliderUpdateTime = 0.08f;
 
+    private bool isdoomed = false;
+
     public static void AddLight(LightObserver toad)
     {
         lights.Add(toad);
@@ -54,10 +56,15 @@ public class ShadowObject : MonoBehaviour
     public static void DeleteLight(LightObserver ded)
     {
         lights.Remove(ded);
-        foreach(ShadowObject obj in shadowObjects)
+        foreach (ShadowObject obj in shadowObjects)
         {
             obj.DeleteShadow(ded);
         }
+    }
+
+    public static void DeleteShadowObject(ShadowObject todelete)
+    {
+        shadowObjects.Remove(todelete);
     }
 
     private void Awake()
@@ -81,7 +88,7 @@ public class ShadowObject : MonoBehaviour
 
     private void Update()
     {
-        foreach(ShadowHolder shadow in shadowMap.Values)
+        foreach (ShadowHolder shadow in shadowMap.Values)
         {
             shadow.shadowTransform.position = transform.position;
         }
@@ -89,32 +96,64 @@ public class ShadowObject : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // prestore if the object has moved or not
-        bool currObjectHasChanged = TransformHasChanged();
-
-        // Check each light
-        foreach (LightObserver light in lights)
+        if (!isdoomed)
         {
-            ShadowHolder currShadow;
-            if (!shadowMap.TryGetValue(light, out currShadow))
-            {
-                // shadow for this light does not exist. Going to create it now
-                currShadow = InitializeShadowCollider();
-                shadowMap.Add(light, currShadow);
-                shadowList.Add(currShadow);
-            }
+            // prestore if the object has moved or not
+            bool currObjectHasChanged = TransformHasChanged();
 
-            // light exists, deal with if it has moved or not
-            if (currShadow.canUpdateCollider && (currObjectHasChanged || light.TransformHasChanged()))
+            // Check each light
+            foreach (LightObserver light in lights)
             {
-                StartCoroutine(UpdateShadowCollider(light, currShadow, shadowColliderUpdateTime));
-                currShadow.canUpdateCollider = false;
+                ShadowHolder currShadow;
+                if (!shadowMap.TryGetValue(light, out currShadow))
+                {
+                    // shadow for this light does not exist. Going to create it now
+                    currShadow = InitializeShadowCollider();
+                    shadowMap.Add(light, currShadow);
+                }
+
+                // light exists, deal with if it has moved or not
+                if (currShadow.canUpdateCollider && (currObjectHasChanged || light.TransformHasChanged()))
+                {
+                    StartCoroutine(UpdateShadowCollider(light, currShadow, shadowColliderUpdateTime));
+                    currShadow.canUpdateCollider = false;
+                }
             }
         }
-
         previousPosition = transform.position;
         previousRotation = transform.rotation;
         previousScale = transform.localScale;
+    }
+
+    public IEnumerator DestroyEntity(GameObject shadowThatGotHit)
+    {
+        // This is a poorly named function, but this method clean up things, does an animation on the model, then deletes it.
+        isdoomed = true;
+
+        // get list from map
+        List<ShadowHolder> shadows = shadowMap.Values.ToList();
+
+        // Clear the dictionary, we don't need it anymore. Then let update get called. 
+        shadowMap.Clear();
+        yield return new WaitForFixedUpdate();
+
+        // Remove it from the global static list
+        ShadowObject.DeleteShadowObject(this);
+
+        // Delete all the shadow game objects
+        foreach (ShadowHolder shadow in shadows)
+        {
+            if(shadow.shadowTransform.gameObject != shadowThatGotHit)
+            {
+                Destroy(shadow.shadowTransform.gameObject);
+            }
+        }
+
+        // Play animation on curr object
+        yield return new WaitForSeconds(1.0f);
+
+        // Destroy self.
+        Destroy(gameObject);
     }
 
     private ShadowHolder InitializeShadowCollider()
@@ -124,6 +163,7 @@ public class ShadowObject : MonoBehaviour
         GameObject shadowGameObject = new GameObject($"{gameObject.name} Shadow");
         //shadowGameObject.hideFlags = HideFlags.HideInHierarchy; //OPTIONNAL
         shadow.shadowTransform = shadowGameObject.transform;
+        shadowGameObject.layer = LayerMask.NameToLayer("Shadow");
 
         // Add collider
         shadow.shadowCollider = shadowGameObject.AddComponent<MeshCollider>();
@@ -136,8 +176,16 @@ public class ShadowObject : MonoBehaviour
         // Add the mesh filter
         shadow.shadowColliderFilter = shadowGameObject.AddComponent<MeshFilter>();
         shadow.shadowColliderFilter.sharedMesh = shadow.shadowColliderMesh;
+
+        // Mesh renderer
         MeshRenderer shadowRender = shadowGameObject.AddComponent<MeshRenderer>();
         shadowRender.material = shadowMaterial;
+        shadowRender.shadowCastingMode = ShadowCastingMode.Off;
+
+        // Destroy script
+        shadowGameObject.AddComponent<DestroyShadow>();
+
+        shadow.shadowTransform.position = transform.position;
 
         return shadow;
     }
@@ -147,6 +195,8 @@ public class ShadowObject : MonoBehaviour
         yield return new WaitForSeconds(delay);
         shadow.shadowColliderMesh.vertices = ComputeShadowColliderMeshVertices(light);
         shadow.shadowColliderMesh.triangles = objectTris;
+        shadow.shadowColliderMesh.RecalculateBounds();
+        shadow.shadowColliderMesh.RecalculateNormals();
         shadow.shadowCollider.sharedMesh = shadow.shadowColliderMesh;
         shadow.canUpdateCollider = true;
     }
@@ -194,9 +244,12 @@ public class ShadowObject : MonoBehaviour
 
     public void DeleteShadow(LightObserver light)
     {
-        ShadowHolder toDelete = shadowMap[light];
-        shadowMap.Remove(light);
-        Destroy(toDelete.shadowTransform.gameObject);
+        ShadowHolder toDelete;
+        if (shadowMap.TryGetValue(light, out toDelete))
+        {
+            shadowMap.Remove(light);
+            // Destroy(toDelete.shadowTransform.gameObject);
+        }
     }
 
     //private int[] ComputeShadowColliderMeshTriangles()
@@ -221,10 +274,13 @@ public class ShadowObject : MonoBehaviour
     //private void OnDrawGizmos()
     //{
     //    Gizmos.color = Color.red;
-    //    foreach (Vector3 vert in shadowColliderMesh.vertices)
+    //    foreach (ShadowHolder shadow in shadowList)
     //    {
-    //        Vector3 worldpos = shadowTransform.TransformPoint(vert);
-    //        Gizmos.DrawCube(worldpos, Vector3.one * 0.01f);
+    //        foreach (Vector3 vert in shadow.shadowColliderMesh.vertices)
+    //        {
+    //            Vector3 worldpos = shadow.shadowTransform.TransformPoint(vert);
+    //            Gizmos.DrawCube(worldpos, Vector3.one * 0.01f);
+    //        }
     //    }
     //}
 }

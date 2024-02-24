@@ -8,7 +8,7 @@ public enum EnemyAiType
 {
     Idle,
     Lazy,
-    Alert,
+    Attack,
     Patrol,
     MAX_ENEMY_AI_TYPE
 }
@@ -63,9 +63,9 @@ public class EnemyAiBase : MonoBehaviour
             case EnemyAiType.Lazy:
                 // Don't move, just shoot at player.
                 break;
-            case EnemyAiType.Alert:
+            case EnemyAiType.Attack:
                 // Stay stationary, and move towards player if you see them.
-                if (CanSeePlayer())
+                if (CanSeePlayer() || CanSeeBullet())
                 {
                     agent.SetDestination(player.transform.position);
                 }
@@ -115,13 +115,19 @@ public class EnemyAiBase : MonoBehaviour
         // draw raycast to see if you hit the player
         Vector3 playerDirection = player.transform.position - transform.position;
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, playerDirection, out hit, Mathf.Infinity, playerLayerMask))
+        if (Physics.Raycast(transform.position, playerDirection, out hit, Mathf.Infinity,playerLayerMask))
         {
             if (hit.collider.gameObject.name == "Player" && (hit.point - transform.position).magnitude < maxViewDistance)
             {
                 return true;
             }
         }
+        return false;
+    }
+
+    private bool CanSeeBullet()
+    {
+
         return false;
     }
 
