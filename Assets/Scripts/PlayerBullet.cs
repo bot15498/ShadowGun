@@ -8,6 +8,9 @@ public class PlayerBullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        onHit?.Invoke(this, collision.collider);
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Shadow"))
+        {
+            onHit?.Invoke(this, collision.collider);
+        }
     }
 }
