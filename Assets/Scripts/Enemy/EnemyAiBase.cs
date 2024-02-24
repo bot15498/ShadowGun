@@ -39,7 +39,7 @@ public class EnemyAiBase : MonoBehaviour
     private bool isAlerted = false;
     private bool playedAlertSound = false;
 
-    // Global events
+    // Audio events
     public delegate void OnAlert(GameObject enemy);
     public static OnAlert onAlert;
 

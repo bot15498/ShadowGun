@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 public class Gun : MonoBehaviour
 {
-    // Global events
+    // Audio events
     public delegate void OnPlayerFire();
     public static OnPlayerFire onPlayerFire;
 

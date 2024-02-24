@@ -23,7 +23,6 @@ public class EnemyHP : MonoBehaviour {
         {
             if(shadowTarget == collider)
             {
-                Debug.Log("Enemy took damage");
                 // Kill bullet
                 Destroy(bullet.gameObject);
 

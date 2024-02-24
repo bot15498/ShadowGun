@@ -21,6 +21,7 @@ public class PlayerAudio : MonoBehaviour
         emitter.transform.position = gameObject.transform.position;
         emitter.transform.parent = gameObject.transform;
         AudioSource src = emitter.AddComponent<AudioSource>();
+        src.playOnAwake = false;
 
         if (pitchMin > 0)
             src.pitch = Random.Range(pitchMin, pitchMax);

@@ -6,6 +6,8 @@ public class EnemyAudio : MonoBehaviour {
     private AudioClip[] alert;
     [SerializeField]
     private AudioClip death;
+    [SerializeField]
+    private AudioClip[] shatter;
 
     private void Awake() {
         EnemyAiBase.onAlert += (GameObject enemy) => {
@@ -14,6 +16,10 @@ public class EnemyAudio : MonoBehaviour {
         };
         EnemyHP.onDeath += (GameObject enemy) =>
             StartCoroutine(OneShot("Death", death, enemy, 0.5f, 2.0f));
+        DestroyShadow.onShatter += (GameObject shadow) => {
+            AudioClip clip = shatter[Random.Range(0, shatter.Length - 1)];
+            StartCoroutine(OneShot("Break", clip, shadow, 0.5f, 2.0f));
+        };
     }
 
     IEnumerator OneShot(
@@ -26,6 +32,7 @@ public class EnemyAudio : MonoBehaviour {
         GameObject emitter = new() { name = name };
         emitter.transform.position = enemy.transform.position;
         AudioSource src = emitter.AddComponent<AudioSource>();
+        src.playOnAwake = false;
 
         if (pitchMin > 0)
             src.pitch = Random.Range(pitchMin, pitchMax);

@@ -42,9 +42,6 @@ public class ShadowObject : MonoBehaviour
     [SerializeField] private Vector3[] objectVertices;
     [SerializeField] private int[] objectTris;
 
-    // Sound stuff
-    [SerializeField] AudioClip[] shadowBreakSounds;
-
     // variables to detect if the object has moved or not, which is then use to update shadows 
     private Vector3 previousPosition;
     private Quaternion previousRotation;
@@ -198,11 +195,6 @@ public class ShadowObject : MonoBehaviour
         shadowRender.material = shadowMaterialNormal;
         shadowRender.shadowCastingMode = ShadowCastingMode.Off;
         shadow.shadowMaterialOpaque = shadowMaterialOpaque;
-
-        // Audio
-        AudioSource shadowSound = shadowGameObject.AddComponent<AudioSource>();
-        shadowSound.loop = false;
-        shadowSound.clip = shadowBreakSounds[UnityEngine.Random.Range(0, shadowBreakSounds.Length - 1)];
 
         // Destroy script
         DestroyShadow shadowScript = shadowGameObject.AddComponent<DestroyShadow>();
