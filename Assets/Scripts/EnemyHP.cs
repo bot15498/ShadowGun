@@ -3,9 +3,9 @@ using System.Linq;
 using UnityEngine;
 
 public class EnemyHP : MonoBehaviour {
-    [SerializeField] private ShadowObject shadowObject;
+    private ShadowObject shadowObject;
     [SerializeField] AudioClip deathSound;
-    [SerializeField] private AudioSource shadowAudioSource;
+    private AudioSource shadowAudioSource;
 
     private void Awake() {
         PlayerBullet.onHit += TakeDamage; // Listen to bullet collision event
