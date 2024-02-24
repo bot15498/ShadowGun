@@ -39,6 +39,9 @@ public class ShadowObject : MonoBehaviour
     [SerializeField] private Vector3[] objectVertices;
     [SerializeField] private int[] objectTris;
 
+    // Sound stuff
+    [SerializeField] AudioClip[] shadowBreakSounds;
+
     // variables to detect if the object has moved or not, which is then use to update shadows 
     private Vector3 previousPosition;
     private Quaternion previousRotation;
@@ -143,14 +146,15 @@ public class ShadowObject : MonoBehaviour
         // Delete all the shadow game objects
         foreach (ShadowHolder shadow in shadows)
         {
-            if(shadow.shadowTransform.gameObject != shadowThatGotHit)
+            if (shadow.shadowTransform.gameObject != shadowThatGotHit)
             {
                 Destroy(shadow.shadowTransform.gameObject);
             }
         }
 
-        // Play animation on curr object
+        // Wait a bit, then delete the shadow
         yield return new WaitForSeconds(1.0f);
+        Destroy(shadowThatGotHit);
 
         // Destroy self.
         Destroy(gameObject);
@@ -182,6 +186,11 @@ public class ShadowObject : MonoBehaviour
         shadowRender.material = shadowMaterial;
         shadowRender.shadowCastingMode = ShadowCastingMode.Off;
 
+        // Audio
+        AudioSource shadowSound = shadowGameObject.AddComponent<AudioSource>();
+        shadowSound.loop = false;
+        shadowSound.clip = shadowBreakSounds[UnityEngine.Random.Range(0, shadowBreakSounds.Length - 1)];
+
         // Destroy script
         shadowGameObject.AddComponent<DestroyShadow>();
 
@@ -193,12 +202,15 @@ public class ShadowObject : MonoBehaviour
     private IEnumerator UpdateShadowCollider(LightObserver light, ShadowHolder shadow, float delay)
     {
         yield return new WaitForSeconds(delay);
-        shadow.shadowColliderMesh.vertices = ComputeShadowColliderMeshVertices(light);
-        shadow.shadowColliderMesh.triangles = objectTris;
-        shadow.shadowColliderMesh.RecalculateBounds();
-        shadow.shadowColliderMesh.RecalculateNormals();
-        shadow.shadowCollider.sharedMesh = shadow.shadowColliderMesh;
-        shadow.canUpdateCollider = true;
+        if (!isdoomed)
+        {
+            shadow.shadowColliderMesh.vertices = ComputeShadowColliderMeshVertices(light);
+            shadow.shadowColliderMesh.triangles = objectTris;
+            shadow.shadowColliderMesh.RecalculateBounds();
+            shadow.shadowColliderMesh.RecalculateNormals();
+            shadow.shadowCollider.sharedMesh = shadow.shadowColliderMesh;
+            shadow.canUpdateCollider = true;
+        }
     }
 
     private Vector3[] ComputeShadowColliderMeshVertices(LightObserver light)

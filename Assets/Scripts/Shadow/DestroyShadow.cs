@@ -21,7 +21,7 @@ public class DestroyShadow : MonoBehaviour
 
     public IEnumerator DestroyMesh()
     {
-        // https://discussions.unity.com/t/script-to-break-mesh-into-smaller-pieces/143755/2
+        // https://discussions.unity.com/t/script-to-break-mesh-into-smaller-pieces/143755/2\
         if (GetComponent<MeshFilter>() == null || GetComponent<SkinnedMeshRenderer>() == null)
         {
             yield return null;
@@ -78,20 +78,26 @@ public class DestroyShadow : MonoBehaviour
                 mesh.triangles = new int[] { 0, 1, 2, 2, 1, 0 };
 
                 mesh.RecalculateBounds();
+                mesh.RecalculateNormals();
 
                 GameObject GO = new GameObject("Triangle " + (i / 3));
                 GO.layer = LayerMask.NameToLayer("ShadowParticle");
                 GO.transform.position = transform.position;
                 GO.transform.rotation = transform.rotation;
-                GO.AddComponent<MeshRenderer>().material = materials[submesh];
+                MeshRenderer particleMeshRender = GO.AddComponent<MeshRenderer>();
+                particleMeshRender.material = materials[submesh];
+                particleMeshRender.shadowCastingMode = ShadowCastingMode.Off;
                 GO.AddComponent<MeshFilter>().mesh = mesh;
-                GO.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
-                GO.AddComponent<BoxCollider>();
+                BoxCollider particleBoxCollider = GO.AddComponent<BoxCollider>();
+                particleBoxCollider.size = new Vector3(particleBoxCollider.size.x, 0.01f, particleBoxCollider.size.z);
                 Vector3 explosionPos = new Vector3(transform.position.x + Random.Range(-0.5f, 0.5f), transform.position.y + Random.Range(0f, 0.5f), transform.position.z + Random.Range(-0.5f, 0.5f));
-                GO.AddComponent<Rigidbody>().AddExplosionForce(Random.Range(300, 500), explosionPos, 5);
-                Destroy(GO, 5 + Random.Range(0.0f, 2.0f));
+                GO.AddComponent<Rigidbody>().AddExplosionForce(Random.Range(500, 2000), explosionPos, 30);
+                Destroy(GO, 5 + Random.Range(0.0f, 1.0f));
             }
         }
+
+        // Play smash
+        GetComponent<AudioSource>().Play();
 
         GetComponent<Renderer>().enabled = false;
 
