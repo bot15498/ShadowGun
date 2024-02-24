@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class AudioChannel : MonoBehaviour {
     protected AudioSource src;
-    [SerializeField] AudioClip clip;
+    [SerializeField] protected AudioClip clip;
     private void Awake() {
         src = GetComponent<AudioSource>();
         src.mute = false;
