@@ -6,6 +6,9 @@ public class Bullet : MonoBehaviour
 {
     // Start is called before the first frame update
     public float speed;
+    public int maxBounce = 4;
+    public float timeoutTimeSec = 0f;
+    private int currBounce = 0;
     Rigidbody rb;
     void Start()
     {
@@ -18,5 +21,10 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        currBounce++;
     }
 }

@@ -14,7 +14,10 @@ public class SensitivitySlider : MonoBehaviour
     {
         slider = GetComponent<Slider>();
         SliderText.text = Settings.sensitivitySettings.ToString("0.00");
-        inputField.text = Settings.sensitivitySettings.ToString("0.000");
+        if (inputField != null)
+        {
+            inputField.text = Settings.sensitivitySettings.ToString("0.000");
+        }
     }
 
     // Update is called once per frame

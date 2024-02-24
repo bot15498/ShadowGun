@@ -147,6 +147,7 @@ public class ShadowObject : MonoBehaviour
         ShadowObject.DeleteShadowObject(this);
 
         // Delete all the shadow game objects
+        // we delete the shadow that got hit separately, we have to wait for all the shards to disappear first before we delte.
         foreach (ShadowHolder shadow in shadows)
         {
             if (shadow.shadowTransform.gameObject != shadowThatGotHit)
@@ -166,9 +167,6 @@ public class ShadowObject : MonoBehaviour
                                                     enemyRenderer.material.color.a - 0.05f);
             yield return new WaitForSeconds(0.05f);
         }
-
-        // Wait a bit, then delete the shadow
-        Destroy(shadowThatGotHit);
 
         // Destroy self.
         Destroy(gameObject);
@@ -276,7 +274,7 @@ public class ShadowObject : MonoBehaviour
         if (shadowMap.TryGetValue(light, out toDelete))
         {
             shadowMap.Remove(light);
-            // Destroy(toDelete.shadowTransform.gameObject);
+            Destroy(toDelete.shadowTransform.gameObject);
         }
     }
 
