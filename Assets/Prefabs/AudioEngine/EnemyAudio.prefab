@@ -51,4 +51,3 @@ MonoBehaviour:
   shatter:
   - {fileID: 8300000, guid: 274d6ef02247abc4088093914e1f4881, type: 3}
   - {fileID: 8300000, guid: 5280d7d074d63644ab6739da79121bd9, type: 3}
-  - {fileID: 8300000, guid: 4f882c01cd7e871469c15000e8529bdd, type: 3}
