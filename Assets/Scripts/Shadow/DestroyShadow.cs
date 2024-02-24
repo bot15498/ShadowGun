@@ -94,7 +94,7 @@ public class DestroyShadow : MonoBehaviour
                 particleBoxCollider.size = new Vector3(particleBoxCollider.size.x, 0.05f, particleBoxCollider.size.z);
                 Vector3 explosionPos = new Vector3(transform.position.x + Random.Range(-3.5f, 3.5f), transform.position.y + Random.Range(0f, 10.5f), transform.position.z + Random.Range(-3.5f, 3.5f));
                 GO.AddComponent<Rigidbody>().AddExplosionForce(Random.Range(750, 2000), explosionPos, 30);
-                Destroy(GO, 5 + Random.Range(0.0f, 1.0f));
+                StartCoroutine(DelayedDestroy(GO, 1 + Random.Range(0.0f, 0.5f)));
             }
         }
 
@@ -103,24 +103,27 @@ public class DestroyShadow : MonoBehaviour
 
         GetComponent<Renderer>().enabled = false;
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(7.0f);
         Destroy(gameObject);
     }
 
-    //private IEnumerator DelayedDestroy(GameObject go, float delay)
-    //{
-    //    MeshRenderer shadowParticleRender = go.GetComponent<MeshRenderer>();
-    //    float time = 0f;
-    //    while (time < delay)
-    //    {
-    //        float newAlpha = Mathf.Lerp(1f, 0f, time / delay);
-    //        Material mat = shadowParticleRender.material;
-    //        shadowParticleRender.material.color = new Color()
+    private IEnumerator DelayedDestroy(GameObject go, float delay)
+    {
+        MeshRenderer shadowParticleRender = go.GetComponent<MeshRenderer>();
+        float time = 0f;
+        while (time < delay)
+        {
+            float newAlpha = Mathf.Lerp(0f, 1f, time / delay);
+            shadowParticleRender.material.color = new Color(shadowParticleRender.material.color.r,
+                                                            shadowParticleRender.material.color.g,
+                                                            shadowParticleRender.material.color.b,
+                                                            1 - newAlpha);
 
-    //        time += Time.deltaTime;
-    //    }
+            time += Time.deltaTime;
+            yield return null;
+        }
 
-    //    // Now destroy the game object
-    //    Destroy(go);
-    //}
+        // Now destroy the game object
+        Destroy(go);
+    }
 }
