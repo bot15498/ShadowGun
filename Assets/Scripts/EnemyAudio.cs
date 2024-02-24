@@ -3,13 +3,16 @@ using UnityEngine;
 
 public class EnemyAudio : MonoBehaviour {
     [SerializeField]
-    private AudioClip[] alertSounds;
+    private AudioClip[] alert;
+    [SerializeField]
+    private AudioClip death;
 
     private void Awake() {
         EnemyAiBase.onAlert += (GameObject enemy) => {
-            AudioClip clip = alertSounds[Random.Range(0, alertSounds.Length - 1)];
+            AudioClip clip = alert[Random.Range(0, alert.Length - 1)];
             StartCoroutine(OneShot("Alert", clip, enemy));
         };
+        EnemyHP.onDeath += (GameObject enemy) => StartCoroutine(OneShot("Death", death, enemy));
     }
 
     IEnumerator OneShot(string name, AudioClip clip, GameObject enemy) {

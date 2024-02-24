@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class EnemyHP : MonoBehaviour {
     private ShadowObject shadowObject;
-    [SerializeField] AudioClip deathSound;
-    private AudioSource shadowAudioSource;
+
+    public delegate void OnDeath(GameObject enemy);
+    public static OnDeath onDeath;
 
     private void Awake() {
         PlayerBullet.onHit += TakeDamage; // Listen to bullet collision event
@@ -14,7 +15,6 @@ public class EnemyHP : MonoBehaviour {
     private void Start()
     {
         shadowObject = GetComponent<ShadowObject>();
-        shadowAudioSource = GetComponent<AudioSource>();
     }
 
     private void TakeDamage(PlayerBullet bullet, Collider shadowTarget) {
@@ -28,8 +28,7 @@ public class EnemyHP : MonoBehaviour {
                 Destroy(bullet.gameObject);
 
                 // play sound
-                shadowAudioSource.clip = deathSound;
-                shadowAudioSource.Play();
+                onDeath?.Invoke(gameObject);
 
                 // Prepare enemy for death
                 StartCoroutine(shadowObject.DestroyEntity(collider.gameObject));
