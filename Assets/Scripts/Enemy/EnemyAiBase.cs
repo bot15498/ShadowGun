@@ -138,7 +138,7 @@ public class EnemyAiBase : MonoBehaviour
         }
     }
 
-    private bool CanSeePlayer(float maxView = float.PositiveInfinity)
+    public bool CanSeePlayer(float maxView = float.PositiveInfinity)
     {
         if (player == null)
         {
