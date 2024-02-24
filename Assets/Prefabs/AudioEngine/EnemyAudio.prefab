@@ -47,7 +47,9 @@ MonoBehaviour:
   alert:
   - {fileID: 8300000, guid: 0c35bead4fc73e245b3687fbf6443f7a, type: 3}
   - {fileID: 8300000, guid: e72b892a2c35895499f3e9c1cefeb5d7, type: 3}
-  death: {fileID: 8300000, guid: 437773cc8fbe6ac45b65819403087f74, type: 3}
+  death:
+  - {fileID: 8300000, guid: 4774099732a98ea459389c8f1cddf1c8, type: 3}
+  - {fileID: 8300000, guid: 8ecd529ea9251a5459d4098116667bbd, type: 3}
   shatter:
   - {fileID: 8300000, guid: 274d6ef02247abc4088093914e1f4881, type: 3}
   - {fileID: 8300000, guid: 5280d7d074d63644ab6739da79121bd9, type: 3}

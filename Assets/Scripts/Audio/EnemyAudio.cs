@@ -5,20 +5,22 @@ public class EnemyAudio : MonoBehaviour {
     [SerializeField]
     private AudioClip[] alert;
     [SerializeField]
-    private AudioClip death;
+    private AudioClip[] death;
     [SerializeField]
     private AudioClip[] shatter;
 
     private void Awake() {
         EnemyAiBase.onAlert += (GameObject enemy) => {
             AudioClip clip = alert[Random.Range(0, alert.Length - 1)];
-            StartCoroutine(OneShot("Alert", clip, enemy, 0.5f, 2.0f));
+            StartCoroutine(OneShot("Alert", clip, enemy, 1.0f, 0.5f, 2.0f));
         };
-        EnemyHP.onDeath += (GameObject enemy) =>
-            StartCoroutine(OneShot("Death", death, enemy, 0.5f, 2.0f));
+        EnemyHP.onDeath += (GameObject enemy) => {
+            AudioClip clip = death[Random.Range(0, alert.Length - 1)];
+            StartCoroutine(OneShot("Death", clip, enemy, 0.7f, 0.5f, 2.0f));
+        };
         DestroyShadow.onShatter += (GameObject shadow) => {
             AudioClip clip = shatter[Random.Range(0, shatter.Length - 1)];
-            StartCoroutine(OneShot("Break", clip, shadow, 0.5f, 2.0f));
+            StartCoroutine(OneShot("Break", clip, shadow, 0.7f, 0.5f, 2.0f));
         };
     }
 
@@ -26,6 +28,7 @@ public class EnemyAudio : MonoBehaviour {
         string name,
         AudioClip clip,
         GameObject enemy,
+        float vol = 1.0f,
         float pitchMin = 1.0f,
         float pitchMax = 1.0f
     ) {
@@ -34,6 +37,12 @@ public class EnemyAudio : MonoBehaviour {
         AudioSource src = emitter.AddComponent<AudioSource>();
         src.playOnAwake = false;
 
+        src.spatialBlend = 0.9f;
+        src.rolloffMode = AudioRolloffMode.Linear;
+        src.minDistance = 1.0f;
+        src.maxDistance = 30.0f;
+
+        src.volume = vol;
         if (pitchMin > 0)
             src.pitch = Random.Range(pitchMin, pitchMax);
 

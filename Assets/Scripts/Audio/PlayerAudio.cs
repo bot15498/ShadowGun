@@ -8,12 +8,13 @@ public class PlayerAudio : MonoBehaviour
 
     private void Awake() {
         Gun.onPlayerFire += () =>
-            StartCoroutine(OneShot("Gunfire", gunfire, 0.95f, 1.05f));
+            StartCoroutine(OneShot("Gunfire", gunfire, 1.0f, 0.95f, 1.05f));
     }
 
     IEnumerator OneShot(
         string name,
         AudioClip clip,
+        float vol = 1.0f,
         float pitchMin = 1.0f,
         float pitchMax = 1.0f
     ) {
@@ -23,6 +24,7 @@ public class PlayerAudio : MonoBehaviour
         AudioSource src = emitter.AddComponent<AudioSource>();
         src.playOnAwake = false;
 
+        src.volume = vol;
         if (pitchMin > 0)
             src.pitch = Random.Range(pitchMin, pitchMax);
 
