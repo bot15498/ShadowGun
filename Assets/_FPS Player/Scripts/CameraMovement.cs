@@ -32,8 +32,7 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        
         if (Settings.sensitivitySettings != 0)
         {
             sensitivity = new Vector2(Settings.sensitivitySettings, Settings.sensitivitySettings);
