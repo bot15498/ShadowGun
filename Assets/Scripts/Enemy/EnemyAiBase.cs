@@ -39,17 +39,12 @@ public class EnemyAiBase : MonoBehaviour
     private bool isAlerted = false;
     private bool playedAlertSound = false;
 
-    // SOund stuff
-    [SerializeField] 
-    private AudioClip[] alertSounds;
-    [SerializeField] 
-    private AudioSource enemyAudioSource;
+    // Global events
+    public delegate void OnAlert(GameObject enemy);
+    public static OnAlert onAlert;
 
     void Start()
     {
-        enemyAudioSource = GetComponent<AudioSource>();
-        enemyAudioSource.loop = false;
-
         agent = GetComponent<NavMeshAgent>();
         if (home == Vector3.zero)
         {
@@ -87,8 +82,7 @@ public class EnemyAiBase : MonoBehaviour
                 {
                     if(!playedAlertSound)
                     {
-                        enemyAudioSource.clip = alertSounds[Random.Range(0, alertSounds.Length - 1)];
-                        enemyAudioSource.Play();
+                        onAlert?.Invoke(gameObject);
                         playedAlertSound = true;
                     }
                     isAlerted = true;
@@ -119,8 +113,7 @@ public class EnemyAiBase : MonoBehaviour
                 // Use the predefined list of waypoints to move betwen, and if you see player, move towards them.
                 if (CanSeePlayer(maxViewDistance))
                 {
-                    enemyAudioSource.clip = alertSounds[Random.Range(0, alertSounds.Length - 1)];
-                    enemyAudioSource.Play();
+                    onAlert?.Invoke(gameObject);
                     agent.SetDestination(player.transform.position);
                 }
                 else
