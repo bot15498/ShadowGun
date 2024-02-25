@@ -117,13 +117,16 @@ public class PlayerController : MonoBehaviour
         //Misc
         UpdateLean();
         UpdateCamLevel();
-        if(status == Status.sliding)
+        if (legsUI != null)
         {
-            legsUI.SetActive(true);
-        }
-        else
-        {
-            legsUI.SetActive(false);
+            if (status == Status.sliding)
+            {
+                legsUI.SetActive(true);
+            }
+            else
+            {
+                legsUI.SetActive(false);
+            }
         }
     }
 
