@@ -59,7 +59,7 @@ public class DestroyShadow : MonoBehaviour
         }
 
         int numVerticesPerParticle = 6;
-        int objectSkipCount = 3;
+        int objectSkipCount = 4;
         Vector3[] verts = M.vertices;
         Vector3[] normals = M.normals;
         for (int submesh = 0; submesh < M.subMeshCount; submesh++)
