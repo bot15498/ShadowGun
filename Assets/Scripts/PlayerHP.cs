@@ -27,7 +27,7 @@ public class PlayerHP : MonoBehaviour
     void Start()
     {
         EnemyBullet.onHit += TakeDamage; // Listen to bullet collision event from an enemy bullet
-        EnemyMelee.onHit += TakeDamage; 
+        EnemyMelee.onHit += TakeDamage;
         health = maxHealth;
         timer = 0;
         sl = GetComponent<SceneLoader>();
@@ -35,7 +35,7 @@ public class PlayerHP : MonoBehaviour
 
     void Update()
     {
-        if(health != maxHealth && health != 0)
+        if (health != maxHealth && health != 0)
         {
             timer += Time.deltaTime;
             Healthfill.fillAmount = timer / regenerationtime;
@@ -46,13 +46,13 @@ public class PlayerHP : MonoBehaviour
         }
         healthText.text = health.ToString();
 
-        if(timer >= regenerationtime)
+        if (timer >= regenerationtime)
         {
             health += 1;
             timer = 0;
         }
 
-      
+
     }
 
     public void ResetHealth()
@@ -82,7 +82,7 @@ public class PlayerHP : MonoBehaviour
     private void TakeDamage(EnemyMelee enemyBullet, Collider target)
     {
         // decrease health
-        health -= 1;
+        health = health > 0 ? health - 1 : 0;
 
         if (health > 0)
         {
@@ -103,7 +103,7 @@ public class PlayerHP : MonoBehaviour
         Debug.Log("YOU DIED");
         anim.Play("LOOSER");
         StartCoroutine(Example());
-        
+
 
         // play sound
         onDeath?.Invoke(gameObject);

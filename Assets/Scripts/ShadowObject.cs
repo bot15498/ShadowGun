@@ -51,7 +51,7 @@ public class ShadowObject : MonoBehaviour
 
     [SerializeField][Range(0.02f, 1f)] private float shadowColliderUpdateTime = 0.08f;
 
-    private bool isdoomed = false;
+    public bool isdoomed = false;
 
     public static void AddLight(LightObserver toad)
     {
@@ -175,8 +175,8 @@ public class ShadowObject : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
 
-        // Destroy ~~self~~.the parent
-        Destroy(transform.parent.gameObject);
+        // Destroy
+        Destroy(gameObject);
     }
 
     private ShadowHolder InitializeShadowCollider()

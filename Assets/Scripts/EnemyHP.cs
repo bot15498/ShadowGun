@@ -36,6 +36,7 @@ public class EnemyHP : MonoBehaviour
 
                 if (health <= 0)
                 {
+                    // time to die I guess
                     Die(bullet, shadowTarget);
                 }
             }
@@ -49,12 +50,15 @@ public class EnemyHP : MonoBehaviour
 
         // Prepare enemy for death
         // Kill all the children
-        for (int i = 0; i < transform.childCount; i++)
+        if (gameObject != null)
         {
-            ShadowObject currChild = transform.GetChild(i).gameObject.GetComponent<ShadowObject>();
-            if (currChild != null)
+            for (int i = 0; i < transform.childCount; i++)
             {
-                StartCoroutine(currChild.DestroyEntity(null));
+                ShadowObject currChild = transform.GetChild(i).gameObject.GetComponent<ShadowObject>();
+                if (currChild != null)
+                {
+                    StartCoroutine(currChild.DestroyEntity(null));
+                }
             }
         }
         StartCoroutine(shadowObject.DestroyEntity(shadowTarget.gameObject));
