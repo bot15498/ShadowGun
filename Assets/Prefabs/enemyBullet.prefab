@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cee8629fc3484a24490bbfb9c8e7da93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 9000
+  speed: 2000
   maxBounce: 4
   timeoutTimeSec: 10
   currBounce: 0
@@ -248,6 +248,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e391d94090fbe1540aa56f5dcc52cc1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetHitLayer:
-    serializedVersion: 2
-    m_Bits: 4
+  targetTag: Player

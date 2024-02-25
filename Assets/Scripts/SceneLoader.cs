@@ -20,6 +20,13 @@ public class SceneLoader : MonoBehaviour
         
     }
 
+    public void restartScene()
+    {
+        anim.Play("FadeOut");
+        StartCoroutine(Example2());
+    }
+
+
     public void loadScene()
     {
         anim.Play("FadeOut");
@@ -32,6 +39,14 @@ public class SceneLoader : MonoBehaviour
        
         yield return new WaitForSeconds(1.5f);
         SceneManager.LoadScene(SceneToLoad);
+
+    }
+
+    IEnumerator Example2()
+    {
+
+        yield return new WaitForSeconds(1.5f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
     }
 }
