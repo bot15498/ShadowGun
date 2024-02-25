@@ -58,7 +58,14 @@ public class DeathManager : MonoBehaviour
             case ExitLevelCondition.Survive:
                 // live for certain time
                 currentLiveTime -= Time.deltaTime;
-                timerText.text = currentLiveTime.ToString("00.000");
+                if(currentLiveTime > 0)
+                {
+                    timerText.text = currentLiveTime.ToString("00.000");
+                }
+                else
+                {
+                    timerText.text = "00.000";
+                }
                 if (currentLiveTime <= 0)
                 {
                     YouWin();
