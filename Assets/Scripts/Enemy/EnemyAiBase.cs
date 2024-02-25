@@ -122,6 +122,7 @@ public class EnemyAiBase : MonoBehaviour
                 if (isAlerted)
                 {
                     agent.SetDestination(player.transform.position);
+                    DoActionCheck();
                 }
                 else
                 {
@@ -139,6 +140,7 @@ public class EnemyAiBase : MonoBehaviour
                 {
                     onAlert?.Invoke(gameObject);
                     agent.SetDestination(player.transform.position);
+                    DoActionCheck();
                 }
                 else
                 {
