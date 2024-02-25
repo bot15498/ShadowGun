@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
+using LibAudio;
+
 public class PlayerAudio : MonoBehaviour
 {
     [SerializeField]
@@ -8,15 +10,16 @@ public class PlayerAudio : MonoBehaviour
 
     private void Awake() {
         Gun.onPlayerFire += () =>
-            StartCoroutine(OneShot("Gunfire", gunfire, 1.0f, 0.95f, 1.05f));
+            StartCoroutine(
+                OneShot("Gunfire", gunfire, new(-9f), new(-1f), new(1f)));
     }
 
     IEnumerator OneShot(
         string name,
         AudioClip clip,
-        float vol = 1.0f,
-        float pitchMin = 1.0f,
-        float pitchMax = 1.0f
+        DB vol,
+        Semitone pitchMin,
+        Semitone pitchMax
     ) {
         GameObject emitter = new() { name = name };
         emitter.transform.position = gameObject.transform.position;
@@ -24,9 +27,8 @@ public class PlayerAudio : MonoBehaviour
         AudioSource src = emitter.AddComponent<AudioSource>();
         src.playOnAwake = false;
 
-        src.volume = vol;
-        if (pitchMin > 0)
-            src.pitch = Random.Range(pitchMin, pitchMax);
+        src.volume = vol.Percent;
+        src.pitch = Random.Range(pitchMin.Percent, pitchMax.Percent);
 
         src.PlayOneShot(clip);
         while (src.isPlaying) {
