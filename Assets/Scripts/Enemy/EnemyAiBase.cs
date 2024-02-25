@@ -15,6 +15,7 @@ public enum EnemyAiType
 
 public class EnemyAiBase : MonoBehaviour
 {
+    [SerializeField]
     private NavMeshAgent agent;
     [SerializeField]
     public GameObject player;
@@ -48,7 +49,10 @@ public class EnemyAiBase : MonoBehaviour
 
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        if(agent == null)
+        {
+            agent = GetComponent<NavMeshAgent>();
+        }
         if (home == Vector3.zero)
         {
             //make it here
@@ -121,7 +125,10 @@ public class EnemyAiBase : MonoBehaviour
                 // if you can still see the player after getting noticed, keep chasing him
                 if (isAlerted)
                 {
-                    agent.SetDestination(player.transform.position);
+                    if (Vector3.Distance(transform.position, player.transform.position) > 1)
+                    {
+                        agent.SetDestination(player.transform.position);
+                    }
                     DoActionCheck();
                 }
                 else
