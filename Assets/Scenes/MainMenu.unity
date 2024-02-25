@@ -2671,7 +2671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400b809615440c842ba0937e7183d6e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  music: {fileID: 8300000, guid: 440ae976c0c529a40b959479e4662f74, type: 3}
+  music: {fileID: 8300000, guid: 0f891f6bbd74e0a4db6e1fd821aed314, type: 3}
 --- !u!1 &473257549
 GameObject:
   m_ObjectHideFlags: 0
@@ -11894,8 +11894,8 @@ RectTransform:
   m_Children:
   - {fileID: 98559958}
   - {fileID: 838780379}
-  - {fileID: 756499272}
   - {fileID: 196246376}
+  - {fileID: 756499272}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
