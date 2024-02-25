@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+using LibAudio;
 
 public class TripleQ : MonoBehaviour
 {
@@ -14,6 +14,8 @@ public class TripleQ : MonoBehaviour
         musicPlayer = gameObject.AddComponent<AudioSource>();
         musicPlayer.loop = true;
         musicPlayer.playOnAwake = true;
+        DB vol = new(-14f);
+        musicPlayer.volume = vol.Percent;
         musicPlayer.clip = music;
         musicPlayer.Play();
     }
