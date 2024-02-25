@@ -125,9 +125,15 @@ public class EnemyAiBase : MonoBehaviour
                 // if you can still see the player after getting noticed, keep chasing him
                 if (isAlerted)
                 {
-                    if (Vector3.Distance(transform.position, player.transform.position) > 1)
+                    if (Vector3.Distance(transform.position, player.transform.position) > 3)
                     {
+                        agent.isStopped = false;
                         agent.SetDestination(player.transform.position);
+                    }
+                    else
+                    {
+                        Debug.Log("About to stop in front of player");
+                        agent.isStopped = true;
                     }
                     DoActionCheck();
                 }
