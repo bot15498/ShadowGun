@@ -30,6 +30,7 @@ public class ShadowObject : MonoBehaviour
     private static List<LightObserver> lights = null;
     private static List<ShadowObject> shadowObjects = null;
 
+    [SerializeField] private Transform pointToLookAt = null;
     [SerializeField] private LayerMask targetLayerMask;
     [SerializeField] private float extrusion = 0.1f;
     [SerializeField] private float maxShadowDistance = 500f;
@@ -114,7 +115,7 @@ public class ShadowObject : MonoBehaviour
                     // shadow for this light does not exist. Going to create it now
                     // Only create it if we can actually see the object we are going to create. 
                     // There is a bug here if the light is visible, but then goes behind a wall, then it will still draw the shadow. 
-                    if (light.CanSeeObject(gameObject, targetLayerMask.value | (1 << gameObject.layer), maxShadowDistance))
+                    if (light.CanSeeObject(gameObject, targetLayerMask.value | (1 << gameObject.layer), maxShadowDistance, pointToLookAt))
                     {
                         currShadow = InitializeShadowCollider();
                         shadowMap.Add(light, currShadow);
@@ -255,7 +256,6 @@ public class ShadowObject : MonoBehaviour
     {
         // Use the hit detection information on where to extrude
         RaycastHit hit;
-
         if (Physics.Raycast(fromPosition, direction, out hit, Mathf.Infinity, targetLayerMask))
         {
             return hit.point - transform.position + hit.normal * offset;

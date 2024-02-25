@@ -34,7 +34,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 517751808051899099}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.693, z: 0}
   m_LocalScale: {x: 0.52448, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20409,7 +20409,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5ecf0a70713b72942bd4ac93fc7338e3, type: 2}
+  - {fileID: 2100000, guid: 2f6a5da1487eff943a801e8e17ceb57f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20621,6 +20621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a24854d7fe0567243a66fb469effafc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pointToLookAt: {fileID: 4850803994117442502}
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 512
@@ -20632,6 +20633,37 @@ MonoBehaviour:
   objectVertices: []
   objectTris: 
   shadowColliderUpdateTime: 0.02
+--- !u!1 &1098748983560143042
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4850803994117442502}
+  m_Layer: 0
+  m_Name: Centerpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4850803994117442502
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1098748983560143042}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.139, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 637633031011229077}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2274735466027700929
 GameObject:
   m_ObjectHideFlags: 0
@@ -20786,6 +20818,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6838228925680193956}
+  - {fileID: 4850803994117442502}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20798,7 +20831,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 8244675658255928623}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 2.02
+  m_Radius: 1.62
   m_Speed: 5.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -20807,7 +20840,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 3.82
-  m_BaseOffset: 1.61
+  m_Height: 3.74
+  m_BaseOffset: 2.17
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
