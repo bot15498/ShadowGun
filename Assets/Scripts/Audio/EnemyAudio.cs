@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
+using LibAudio;
+
 public class EnemyAudio : MonoBehaviour {
     [SerializeField]
     private AudioClip[] alert;
@@ -12,15 +14,18 @@ public class EnemyAudio : MonoBehaviour {
     private void Awake() {
         EnemyAiBase.onAlert += (GameObject enemy) => {
             AudioClip clip = alert[Random.Range(0, alert.Length)];
-            StartCoroutine(OneShot("Alert", clip, enemy, 1.0f, 0.8f, 1.4f));
+            StartCoroutine(
+                OneShot("Alert", clip, enemy, new(0f), new(-4), new(4)));
         };
         EnemyHP.onDeath += (GameObject enemy) => {
             AudioClip clip = death[Random.Range(0, death.Length)];
-            StartCoroutine(OneShot("Death", clip, enemy, 0.7f, 0.8f, 1.4f));
+            StartCoroutine(
+                OneShot("Death", clip, enemy, new(-6f), new(-4), new(4)));
         };
         DestroyShadow.onShatter += (GameObject shadow) => {
             AudioClip clip = shatter[Random.Range(0, shatter.Length)];
-            StartCoroutine(OneShot("Break", clip, shadow, 0.7f, 0.8f, 1.4f));
+            StartCoroutine(
+                OneShot("Break", clip, shadow, new(-6f), new(-4), new(4)));
         };
     }
 
@@ -28,9 +33,9 @@ public class EnemyAudio : MonoBehaviour {
         string name,
         AudioClip clip,
         GameObject enemy,
-        float vol = 1.0f,
-        float pitchMin = 1.0f,
-        float pitchMax = 1.0f
+        DB vol,
+        Semitone pitchMin,
+        Semitone pitchMax
     ) {
         GameObject emitter = new() { name = name };
         emitter.transform.position = enemy.transform.position;
@@ -42,9 +47,8 @@ public class EnemyAudio : MonoBehaviour {
         src.minDistance = 1.0f;
         src.maxDistance = 30.0f;
 
-        src.volume = vol;
-        if (pitchMin > 0)
-            src.pitch = Random.Range(pitchMin, pitchMax);
+        src.volume = vol.Percent;
+        src.pitch = Random.Range(pitchMin.Percent, pitchMax.Percent);
 
         src.PlayOneShot(clip);
         while (src.isPlaying) {
