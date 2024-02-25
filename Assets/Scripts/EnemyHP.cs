@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class EnemyHP : MonoBehaviour
 {
+    [SerializeField]
+    private int maxHealth =2;
+    [SerializeField]
+    private int health = 2;
+
     private ShadowObject shadowObject;
 
     public delegate void OnDeath(GameObject enemy);
@@ -17,6 +22,7 @@ public class EnemyHP : MonoBehaviour
     private void Start()
     {
         shadowObject = GetComponent<ShadowObject>();
+        health = maxHealth;
     }
 
     private void TakeDamage(PlayerBullet bullet, Collider shadowTarget)
@@ -26,31 +32,38 @@ public class EnemyHP : MonoBehaviour
         {
             if (shadowTarget == collider)
             {
-                // Kill bullet
-                Destroy(bullet.gameObject);
+                health--;
 
-                // play sound
-                onDeath?.Invoke(gameObject);
-
-                // Prepare enemy for death
-                // Kill all the children
-                for (int i = 0; i < transform.childCount; i++)
+                if (health <= 0)
                 {
-                    ShadowObject currChild = transform.GetChild(i).gameObject.GetComponent<ShadowObject>();
-                    if (currChild != null)
-                    {
-                        StartCoroutine(currChild.DestroyEntity(null));
-                    }
-                }
-                StartCoroutine(shadowObject.DestroyEntity(collider.gameObject));
-
-                // Kill this current shadow
-                DestroyShadow shadowScript = collider.gameObject.GetComponent<DestroyShadow>();
-                if (shadowScript != null)
-                {
-                    StartCoroutine(shadowScript.DestroyMesh());
+                    Die(bullet, shadowTarget);
                 }
             }
+        }
+    }
+
+    private void Die(PlayerBullet bullet, Collider shadowTarget)
+    {
+        // Kill bullet
+        Destroy(bullet.gameObject);
+
+        // Prepare enemy for death
+        // Kill all the children
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            ShadowObject currChild = transform.GetChild(i).gameObject.GetComponent<ShadowObject>();
+            if (currChild != null)
+            {
+                StartCoroutine(currChild.DestroyEntity(null));
+            }
+        }
+        StartCoroutine(shadowObject.DestroyEntity(shadowTarget.gameObject));
+
+        // Kill this current shadow
+        DestroyShadow shadowScript = shadowTarget.gameObject.GetComponent<DestroyShadow>();
+        if (shadowScript != null)
+        {
+            StartCoroutine(shadowScript.DestroyMesh());
         }
     }
 }
