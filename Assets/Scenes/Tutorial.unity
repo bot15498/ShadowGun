@@ -3768,7 +3768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunBarrel: {fileID: 617971388}
   bullet: {fileID: 5823943288781092858, guid: ee31cb6e74a61104792e5267929e1860, type: 3}
-  ammocountMax: 20
+  ammocountMax: 10
   ammocount: 0
   firerate: 0.15
   reloadtimer: 2
@@ -6068,7 +6068,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh62396
+  m_Name: pb_Mesh213152
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -6718,7 +6718,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh61930
+  m_Name: pb_Mesh212686
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -8012,7 +8012,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh61980
+  m_Name: pb_Mesh212736
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -8666,7 +8666,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh62346
+  m_Name: pb_Mesh213102
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -44714,7 +44714,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh62790
+  m_Name: pb_Mesh213546
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
