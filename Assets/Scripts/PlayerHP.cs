@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerHP : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class PlayerHP : MonoBehaviour
     public delegate void OnHit(GameObject player);
     public static OnHit onHit;
     public float regenerationtime;
+    public Animator anim;
+    SceneLoader sl;
 
     float timer;
 
@@ -27,6 +30,7 @@ public class PlayerHP : MonoBehaviour
         EnemyMelee.onHit += TakeDamage; 
         health = maxHealth;
         timer = 0;
+        sl = GetComponent<SceneLoader>();
     }
 
     void Update()
@@ -48,7 +52,7 @@ public class PlayerHP : MonoBehaviour
             timer = 0;
         }
 
-
+      
     }
 
     public void ResetHealth()
@@ -97,9 +101,23 @@ public class PlayerHP : MonoBehaviour
     private void Die()
     {
         Debug.Log("YOU DIED");
+        anim.Play("LOOSER");
+        StartCoroutine(Example());
+        
+
         // play sound
         onDeath?.Invoke(gameObject);
 
         // gameover?
     }
+
+    IEnumerator Example()
+    {
+
+        yield return new WaitForSeconds(2.5f);
+        sl.restartScene();
+
+    }
+
+
 }
