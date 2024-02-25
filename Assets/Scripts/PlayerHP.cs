@@ -10,7 +10,7 @@ public class PlayerHP : MonoBehaviour
     [SerializeField]
     private int maxHealth = 3;
     [SerializeField]
-    private int health = 3;
+    public int health = 3;
 
     public TextMeshProUGUI healthText;
     public Image Healthfill;

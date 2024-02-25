@@ -8,6 +8,8 @@ public class PlayerAudio : MonoBehaviour
     [SerializeField] private AudioClip gunfire;
     [SerializeField] private AudioClip[] step;
     [SerializeField] private AudioClip reload;
+    [SerializeField] private AudioClip[] hurt;
+    [SerializeField] private AudioClip die;
 
     private PlayerInput inputManager;
     private AudioSource stepPlayer;
@@ -31,11 +33,15 @@ public class PlayerAudio : MonoBehaviour
 
         Gun.onPlayerFire += PlayGunfire;
         Gun.onPlayerReload += PlayReload;
+        PlayerHP.onHit += PlayHurt;
+        PlayerHP.onDeath += PlayDeath;
     }
 
     private void OnDestroy() {
         Gun.onPlayerFire -= PlayGunfire;
         Gun.onPlayerReload -= PlayReload;
+        PlayerHP.onHit -= PlayHurt;
+        PlayerHP.onDeath -= PlayDeath;
     }
 
     private void Update() {
@@ -96,5 +102,16 @@ public class PlayerAudio : MonoBehaviour
     private void PlayReload() {
         StartCoroutine(
             OneShot("Reload", reload, new(-13f), new(0f), new(0f)));
+    }
+
+    private void PlayHurt(GameObject player) {
+        AudioClip clip = hurt[Random.Range(0, hurt.Length)];
+        StartCoroutine(
+            OneShot("Hurt", clip, new(-10f), new(-2f), new(2f)));
+    }
+
+    private void PlayDeath(GameObject player) {
+        StartCoroutine(
+            OneShot("Die", die, new(-10f), new(0f), new(0f)));
     }
 }

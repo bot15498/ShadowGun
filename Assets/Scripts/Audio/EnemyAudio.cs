@@ -59,11 +59,11 @@ public class EnemyAudio : MonoBehaviour {
     private void PlayDeath(GameObject enemy) {
         AudioClip clip = death[Random.Range(0, death.Length)];
         StartCoroutine(
-            OneShot("Death", clip, enemy, new(-6f), new(-4f), new(4f)));
+            OneShot("Death", clip, enemy, new(-8f), new(-4f), new(4f)));
     }
     private void PlayShatter(GameObject shadow) {
         AudioClip clip = shatter[Random.Range(0, shatter.Length)];
         StartCoroutine(
-            OneShot("Break", clip, shadow, new(-6f), new(-4f), new(4f)));
+            OneShot("Break", clip, shadow, new(-8f), new(-4f), new(4f)));
     }
 }

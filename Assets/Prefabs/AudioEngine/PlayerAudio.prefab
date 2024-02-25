@@ -52,3 +52,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b91f320e4c3fbe44c91748bbbb46c3ae, type: 3}
   - {fileID: 8300000, guid: e72d612f7305bb64daad6553acb10359, type: 3}
   reload: {fileID: 8300000, guid: 36d2eef1d618dc54e943dab8c6167cae, type: 3}
+  hurt:
+  - {fileID: 8300000, guid: 7199abc2b499eee49a1ce393b664926a, type: 3}
+  - {fileID: 8300000, guid: 83568cada86135542b6016d690e6de97, type: 3}
+  die: {fileID: 8300000, guid: 80a96c2691c859f4887fc804c5399926, type: 3}
