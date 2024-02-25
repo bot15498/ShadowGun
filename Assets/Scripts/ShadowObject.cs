@@ -32,6 +32,7 @@ public class ShadowObject : MonoBehaviour
 
     [SerializeField] private LayerMask targetLayerMask;
     [SerializeField] private float extrusion = 0.1f;
+    [SerializeField] private float maxShadowDistance = 500f;
 
     public Dictionary<LightObserver, ShadowHolder> shadowMap = new Dictionary<LightObserver, ShadowHolder>();
     [SerializeField] private Material shadowMaterialNormal;
@@ -111,15 +112,23 @@ public class ShadowObject : MonoBehaviour
                 if (!shadowMap.TryGetValue(light, out currShadow))
                 {
                     // shadow for this light does not exist. Going to create it now
-                    currShadow = InitializeShadowCollider();
-                    shadowMap.Add(light, currShadow);
+                    // Only create it if we can actually see the object we are going to create. 
+                    // There is a bug here if the light is visible, but then goes behind a wall, then it will still draw the shadow. 
+                    if (light.CanSeeObject(gameObject, targetLayerMask.value | (1 << gameObject.layer), maxShadowDistance))
+                    {
+                        currShadow = InitializeShadowCollider();
+                        shadowMap.Add(light, currShadow);
+                    }
                 }
 
-                // light exists, deal with if it has moved or not
-                if (currShadow.canUpdateCollider && (currObjectHasChanged || light.TransformHasChanged()))
+                if (shadowMap.TryGetValue(light, out currShadow))
                 {
-                    StartCoroutine(UpdateShadowCollider(light, currShadow, shadowColliderUpdateTime));
-                    currShadow.canUpdateCollider = false;
+                    // light exists, deal with if it has moved or not
+                    if (currShadow.canUpdateCollider && (currObjectHasChanged || light.TransformHasChanged()))
+                    {
+                        StartCoroutine(UpdateShadowCollider(light, currShadow, shadowColliderUpdateTime));
+                        currShadow.canUpdateCollider = false;
+                    }
                 }
             }
         }

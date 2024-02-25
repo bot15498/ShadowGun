@@ -34,4 +34,24 @@ public class LightObserver : MonoBehaviour
     {
         return previousPosition != transform.position || previousRotation != transform.rotation || previousScale != transform.localScale;
     }
+
+    public bool CanSeeObject(GameObject point, LayerMask layerMask, float maxDistance=float.PositiveInfinity)
+    {
+        if(lightType == LightType.Directional)
+        {
+            return true;
+        }    
+
+        // draw raycast to see if you hit the player
+        Vector3 playerDirection = point.transform.position - transform.position;
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, playerDirection, out hit, maxDistance, layerMask))
+        {
+            if (hit.collider.gameObject.name == point.gameObject.name)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
