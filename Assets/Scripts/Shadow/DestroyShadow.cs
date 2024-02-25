@@ -58,6 +58,8 @@ public class DestroyShadow : MonoBehaviour
             materials = GetComponent<SkinnedMeshRenderer>().materials;
         }
 
+        int numVerticesPerParticle = 6;
+        int objectSkipCount = 3;
         Vector3[] verts = M.vertices;
         Vector3[] normals = M.normals;
         for (int submesh = 0; submesh < M.subMeshCount; submesh++)
@@ -65,9 +67,8 @@ public class DestroyShadow : MonoBehaviour
 
             int[] indices = M.GetTriangles(submesh);
 
-            int numVerticesPerParticle = 6;
             // Loop over all triangles in groups of numVerticesPerParticle
-            for (int i = numVerticesPerParticle-1; i < indices.Length; i += numVerticesPerParticle)
+            for (int i = numVerticesPerParticle-1; i < indices.Length; i += numVerticesPerParticle * objectSkipCount)
             {
                 Vector3[] newVerts = new Vector3[numVerticesPerParticle];
                 Vector3[] newNormals = new Vector3[numVerticesPerParticle];
