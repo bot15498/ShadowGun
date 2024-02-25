@@ -40,7 +40,7 @@ public class Flare : MonoBehaviour
         {
             flarefill.fillAmount = 1;
         }
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             if(currentflares > 0)
             {
