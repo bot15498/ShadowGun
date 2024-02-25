@@ -1745,7 +1745,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &196246376
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1761,6 +1761,7 @@ RectTransform:
   - {fileID: 2044579842}
   - {fileID: 563244942}
   - {fileID: 1725077989}
+  - {fileID: 1588746091}
   - {fileID: 1318921060}
   - {fileID: 627866971}
   - {fileID: 1573601042}
@@ -6713,7 +6714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 756499273}
-  SceneToLoad: 4
+  SceneToLoad: 5
 --- !u!1 &632818516
 GameObject:
   m_ObjectHideFlags: 0
@@ -12902,7 +12903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 756499273}
-  SceneToLoad: 3
+  SceneToLoad: 4
 --- !u!1 &1340151487
 GameObject:
   m_ObjectHideFlags: 0
@@ -13279,7 +13280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 756499273}
-  SceneToLoad: 6
+  SceneToLoad: 7
 --- !u!1 &1455631173
 GameObject:
   m_ObjectHideFlags: 0
@@ -13766,7 +13767,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 756499273}
-  SceneToLoad: 5
+  SceneToLoad: 6
 --- !u!1 &1583325444
 GameObject:
   m_ObjectHideFlags: 0
@@ -13847,6 +13848,7 @@ GameObject:
   - component: {fileID: 1588746094}
   - component: {fileID: 1588746093}
   - component: {fileID: 1588746092}
+  - component: {fileID: 1588746095}
   m_Layer: 5
   m_Name: Level1 (2)
   m_TagString: Untagged
@@ -13863,16 +13865,16 @@ RectTransform:
   m_GameObject: {fileID: 1588746090}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3.0964627, y: 3.0964627, z: 3.0964627}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 410152852}
-  m_Father: {fileID: 1725077989}
+  m_Father: {fileID: 196246376}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 50.05713, y: 0.000030517578}
+  m_AnchoredPosition: {x: -144.19995, y: 144.80014}
   m_SizeDelta: {x: 35.4644, y: 42.4763}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1588746092
@@ -13918,7 +13920,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1588746093}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1588746095}
+        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
+        m_MethodName: loadScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1588746093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13957,6 +13971,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1588746090}
   m_CullTransparentMesh: 1
+--- !u!114 &1588746095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588746090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 537db67eb0e42ba4eb21ecb032616d8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 756499273}
+  SceneToLoad: 3
 --- !u!1 &1675503887
 GameObject:
   m_ObjectHideFlags: 0
@@ -17056,7 +17084,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1106455683}
-  - {fileID: 1588746091}
   m_Father: {fileID: 196246376}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

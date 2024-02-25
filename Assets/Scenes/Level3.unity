@@ -4724,6 +4724,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   exitLevelCondition: 0
   wintext: {fileID: 1986145637}
+  timerText: {fileID: 0}
   enemies:
   - {fileID: 20689855}
   - {fileID: 1065752891}
@@ -15665,6 +15666,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1995059037}
   - component: {fileID: 1995059036}
+  - component: {fileID: 1995059038}
   m_Layer: 0
   m_Name: w
   m_TagString: Untagged
@@ -15749,6 +15751,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1995059038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995059035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf14fd00851bbe49975a3ac6b5de53a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightType: 0
 --- !u!1 &1999058397
 GameObject:
   m_ObjectHideFlags: 0
