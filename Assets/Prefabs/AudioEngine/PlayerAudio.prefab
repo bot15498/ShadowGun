@@ -45,3 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gunfire: {fileID: 8300000, guid: c01fe25eee04a544a9139d0eaa584102, type: 3}
+  step:
+  - {fileID: 8300000, guid: 4416985e87d1d594282b8fd98a5cc8cf, type: 3}
+  - {fileID: 8300000, guid: 5768659f9e6eefc4980b9480c62d49e9, type: 3}
+  - {fileID: 8300000, guid: 2bad3b46c6f46a0479b91e1fb8d128b5, type: 3}
+  - {fileID: 8300000, guid: b91f320e4c3fbe44c91748bbbb46c3ae, type: 3}
+  - {fileID: 8300000, guid: e72d612f7305bb64daad6553acb10359, type: 3}

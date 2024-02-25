@@ -11,22 +11,16 @@ public class EnemyAudio : MonoBehaviour {
     [SerializeField]
     private AudioClip[] shatter;
 
-    private void Awake() {
-        EnemyAiBase.onAlert += (GameObject enemy) => {
-            AudioClip clip = alert[Random.Range(0, alert.Length)];
-            StartCoroutine(
-                OneShot("Alert", clip, enemy, new(0f), new(-4), new(4)));
-        };
-        EnemyHP.onDeath += (GameObject enemy) => {
-            AudioClip clip = death[Random.Range(0, death.Length)];
-            StartCoroutine(
-                OneShot("Death", clip, enemy, new(-6f), new(-4), new(4)));
-        };
-        DestroyShadow.onShatter += (GameObject shadow) => {
-            AudioClip clip = shatter[Random.Range(0, shatter.Length)];
-            StartCoroutine(
-                OneShot("Break", clip, shadow, new(-6f), new(-4), new(4)));
-        };
+    private void Start() {
+        EnemyAiBase.onAlert += PlayAlert;
+        EnemyHP.onDeath += PlayDeath;
+        DestroyShadow.onShatter += PlayShatter;
+    }
+
+    private void OnDestroy() {
+        EnemyAiBase.onAlert -= PlayAlert;
+        EnemyHP.onDeath -= PlayDeath;
+        DestroyShadow.onShatter -= PlayShatter;
     }
 
     IEnumerator OneShot(
@@ -55,5 +49,21 @@ public class EnemyAudio : MonoBehaviour {
             yield return new WaitForSeconds(.1f);
         }
         Destroy(emitter);
+    }
+
+    private void PlayAlert(GameObject enemy) {
+        AudioClip clip = alert[Random.Range(0, alert.Length)];
+        StartCoroutine(
+            OneShot("Alert", clip, enemy, new(0f), new(-4f), new(4f)));
+    }
+    private void PlayDeath(GameObject enemy) {
+        AudioClip clip = death[Random.Range(0, death.Length)];
+        StartCoroutine(
+            OneShot("Death", clip, enemy, new(-6f), new(-4f), new(4f)));
+    }
+    private void PlayShatter(GameObject shadow) {
+        AudioClip clip = shatter[Random.Range(0, shatter.Length)];
+        StartCoroutine(
+            OneShot("Break", clip, shadow, new(-6f), new(-4f), new(4f)));
     }
 }
