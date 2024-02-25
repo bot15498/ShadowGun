@@ -9,6 +9,9 @@ public class Gun : MonoBehaviour
     public delegate void OnPlayerFire();
     public static OnPlayerFire onPlayerFire;
 
+    public delegate void OnPlayerReload();
+    public static OnPlayerReload onPlayerReload;
+
     // Start is called before the first frame update
     public Transform gunBarrel;
     public GameObject bullet;
@@ -72,6 +75,8 @@ public class Gun : MonoBehaviour
             anim.Play("reload");
             isreloading = true;
             reloadText.SetActive(false);
+
+            onPlayerReload?.Invoke();
 
         }
         if(isreloading == true)

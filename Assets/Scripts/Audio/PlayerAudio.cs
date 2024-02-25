@@ -7,6 +7,7 @@ public class PlayerAudio : MonoBehaviour
 {
     [SerializeField] private AudioClip gunfire;
     [SerializeField] private AudioClip[] step;
+    [SerializeField] private AudioClip reload;
 
     private PlayerInput inputManager;
     private AudioSource stepPlayer;
@@ -29,10 +30,12 @@ public class PlayerAudio : MonoBehaviour
         stepPlayer.volume = vol.Percent;
 
         Gun.onPlayerFire += PlayGunfire;
+        Gun.onPlayerReload += PlayReload;
     }
 
     private void OnDestroy() {
         Gun.onPlayerFire -= PlayGunfire;
+        Gun.onPlayerReload -= PlayReload;
     }
 
     private void Update() {
@@ -88,5 +91,10 @@ public class PlayerAudio : MonoBehaviour
     private void PlayGunfire() {
         StartCoroutine(
             OneShot("Gunfire", gunfire, new(-9f), new(-1f), new(1f)));
+    }
+
+    private void PlayReload() {
+        StartCoroutine(
+            OneShot("Reload", reload, new(-13f), new(0f), new(0f)));
     }
 }
