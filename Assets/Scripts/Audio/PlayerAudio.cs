@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -10,10 +11,16 @@ public class PlayerAudio : MonoBehaviour
     [SerializeField] private AudioClip reload;
     [SerializeField] private AudioClip[] hurt;
     [SerializeField] private AudioClip die;
+    [SerializeField] private AudioClip slide;
 
+    // Used to check player input to control sound behavior
     private PlayerInput inputManager;
+    private PlayerController playerController;
+
+    // Unique audio channels
     private AudioSource stepPlayer;
     private AudioSource reloadPlayer;
+    private AudioSource slidePlayer;
 
     // footstep behavior
     private float secsToStep = 0.38f;
@@ -33,6 +40,7 @@ public class PlayerAudio : MonoBehaviour
 
     private void Start() {
         inputManager = transform.parent.GetComponent<PlayerInput>();
+        playerController = transform.parent.GetComponent<PlayerController>();
 
         stepPlayer = gameObject.AddComponent<AudioSource>();
         stepPlayer.playOnAwake = false;
@@ -45,6 +53,14 @@ public class PlayerAudio : MonoBehaviour
         reloadPlayer.volume = reloadVol.Percent;
         reloadPlayer.clip = reload;
 
+        slidePlayer = gameObject.AddComponent<AudioSource>();
+        slidePlayer.playOnAwake = false;
+        slidePlayer.loop = true;
+        DB slideVol = new(-7f);
+        slidePlayer.volume = slideVol.Percent;
+        slidePlayer.clip = slide;
+
+        // REGISTER EVENTS
         Gun.onPlayerFire += PlayGunfire;
         Gun.onPlayerReload += PlayReload;
         PlayerHP.onHit += PlayHurt;
@@ -52,6 +68,7 @@ public class PlayerAudio : MonoBehaviour
     }
 
     private void OnDestroy() {
+        // GARBAGE COLLECT EVENTS
         Gun.onPlayerFire -= PlayGunfire;
         Gun.onPlayerReload -= PlayReload;
         PlayerHP.onHit -= PlayHurt;
@@ -60,9 +77,9 @@ public class PlayerAudio : MonoBehaviour
 
     private void Update() {
         // Footsteps
-        if (inputManager?.input.magnitude > DEADZONE) {
+        if ((inputManager?.input.magnitude > DEADZONE) &
+        (playerController.status != Status.sliding)) {
             secsToStep += Time.deltaTime;
-
             if (inputManager.run) {
                 if (secsToStep >= SECS_PER_RUN)
                     PlayStep();
@@ -83,13 +100,22 @@ public class PlayerAudio : MonoBehaviour
                 isreloading = false;
             }
         }
+
+        // Slide
+        if (playerController.status == Status.sliding) {
+            if (!slidePlayer.isPlaying)
+                slidePlayer.Play();
+        } else {
+            slidePlayer.Stop();
+        }
+
     }
 
     private void PlayStep() {
         Semitone pitchMin = new(-2f);
         Semitone pitchMax = new(2f);
-        stepPlayer.pitch = Random.Range(pitchMin.Percent, pitchMax.Percent);
-        stepPlayer.clip = step[Random.Range(0, step.Length)];
+        stepPlayer.pitch = UnityEngine.Random.Range(pitchMin.Percent, pitchMax.Percent);
+        stepPlayer.clip = step[UnityEngine.Random.Range(0, step.Length)];
         stepPlayer.Play();
         secsToStep = 0f;
     }
@@ -113,7 +139,7 @@ public class PlayerAudio : MonoBehaviour
         src.playOnAwake = false;
 
         src.volume = vol.Percent;
-        src.pitch = Random.Range(pitchMin.Percent, pitchMax.Percent);
+        src.pitch = UnityEngine.Random.Range(pitchMin.Percent, pitchMax.Percent);
 
         src.PlayOneShot(clip);
         while (src.isPlaying) {
@@ -128,7 +154,7 @@ public class PlayerAudio : MonoBehaviour
     }
 
     private void PlayHurt(GameObject player) {
-        AudioClip clip = hurt[Random.Range(0, hurt.Length)];
+        AudioClip clip = hurt[UnityEngine.Random.Range(0, hurt.Length)];
         StartCoroutine(
             OneShot("Hurt", clip, new(-10f), new(-2f), new(2f)));
     }

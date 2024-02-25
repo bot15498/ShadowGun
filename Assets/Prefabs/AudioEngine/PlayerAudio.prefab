@@ -56,3 +56,4 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7199abc2b499eee49a1ce393b664926a, type: 3}
   - {fileID: 8300000, guid: 83568cada86135542b6016d690e6de97, type: 3}
   die: {fileID: 8300000, guid: 80a96c2691c859f4887fc804c5399926, type: 3}
+  slide: {fileID: 8300000, guid: 88d36bf250b547843a5c5c5dc6b76044, type: 3}
