@@ -251,8 +251,8 @@ public class EnemyAiBase : MonoBehaviour
             Vector3 playerDirection = player.transform.position - transform.position;
             Gizmos.DrawRay(transform.position, playerDirection);
         }
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, maxViewDistance);
+        //Gizmos.color = Color.blue;
+        //Gizmos.DrawWireSphere(transform.position, maxViewDistance);
     }
 
     private IEnumerator DelayIndexIncrease(float seconds)
