@@ -46,7 +46,15 @@ public class PlayerHP : MonoBehaviour
         {
             Healthfill.fillAmount = 1;
         }
-        healthText.text = health.ToString();
+
+        if(health > 0)
+        {
+            healthText.text = health.ToString();
+        }
+        else
+        {
+            healthText.text = "0";
+        }
 
         if (timer >= regenerationtime)
         {
