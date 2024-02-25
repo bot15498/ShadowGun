@@ -13,6 +13,7 @@ public class PlayerAudio : MonoBehaviour
 
     private PlayerInput inputManager;
     private AudioSource stepPlayer;
+    private AudioSource reloadPlayer;
 
     // footstep behavior
     private float secsToStep = 0.38f;
@@ -23,13 +24,26 @@ public class PlayerAudio : MonoBehaviour
     private readonly float DEADZONE = 0.5f;
     private readonly float HEADSTART = 0.38f;
 
+    // reload behavior
+    private float reloadTimer = 0f;
+    private bool isreloading = false;
+
+    // CONSTANTS TO CONFIG RELOAD BEHAVIOR
+    private readonly float RELOAD_COOLDOWN = 2f;
+
     private void Start() {
         inputManager = transform.parent.GetComponent<PlayerInput>();
+
         stepPlayer = gameObject.AddComponent<AudioSource>();
         stepPlayer.playOnAwake = false;
+        DB stepVol = new(-6f);
+        stepPlayer.volume = stepVol.Percent;
 
-        DB vol = new(-6f);
-        stepPlayer.volume = vol.Percent;
+        reloadPlayer = gameObject.AddComponent<AudioSource>();
+        reloadPlayer.playOnAwake = false;
+        DB reloadVol = new(-13f);
+        reloadPlayer.volume = reloadVol.Percent;
+        reloadPlayer.clip = reload;
 
         Gun.onPlayerFire += PlayGunfire;
         Gun.onPlayerReload += PlayReload;
@@ -60,6 +74,15 @@ public class PlayerAudio : MonoBehaviour
             stepPlayer.Stop();
             secsToStep = HEADSTART;
         }
+
+        // Reload
+        if (isreloading) {
+            reloadTimer += Time.deltaTime;
+            if (reloadTimer > RELOAD_COOLDOWN) {
+                reloadTimer = 0f;
+                isreloading = false;
+            }
+        }
     }
 
     private void PlayStep() {
@@ -69,6 +92,11 @@ public class PlayerAudio : MonoBehaviour
         stepPlayer.clip = step[Random.Range(0, step.Length)];
         stepPlayer.Play();
         secsToStep = 0f;
+    }
+    private void PlayReload() {
+        if (isreloading) return;
+        reloadPlayer.Play();
+        isreloading = true;
     }
 
     IEnumerator OneShot(
@@ -97,11 +125,6 @@ public class PlayerAudio : MonoBehaviour
     private void PlayGunfire() {
         StartCoroutine(
             OneShot("Gunfire", gunfire, new(-9f), new(-1f), new(1f)));
-    }
-
-    private void PlayReload() {
-        StartCoroutine(
-            OneShot("Reload", reload, new(-13f), new(0f), new(0f)));
     }
 
     private void PlayHurt(GameObject player) {
