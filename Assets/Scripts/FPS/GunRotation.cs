@@ -31,7 +31,7 @@ public class GunRotation : MonoBehaviour
         }
         else
         {
-            Debug.Log("nothing hit");
+            //Debug.Log("nothing hit");
             //gun.transform.rotation = Quaternion.identity;
         }
 

@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class PlayerHP : MonoBehaviour
 {
+    [SerializeField]
     private int maxHealth = 3;
-    private int health;
+    [SerializeField]
+    private int health = 3;
+
+
     public delegate void OnDeath(GameObject player);
     public static OnDeath onDeath;
     public delegate void OnHit(GameObject player);
@@ -14,6 +18,7 @@ public class PlayerHP : MonoBehaviour
     void Start()
     {
         EnemyBullet.onHit += TakeDamage; // Listen to bullet collision event from an enemy bullet
+        EnemyMelee.onHit += TakeDamage; 
         health = maxHealth;
     }
 
@@ -46,8 +51,28 @@ public class PlayerHP : MonoBehaviour
         }
     }
 
+    private void TakeDamage(EnemyMelee enemyBullet, Collider target)
+    {
+        // decrease health
+        health -= 1;
+
+        if (health > 0)
+        {
+            onHit?.Invoke(gameObject);
+
+            // play some effect?
+
+        }
+        else
+        {
+            // time to die I guess.
+            Die();
+        }
+    }
+
     private void Die()
     {
+        Debug.Log("YOU DIED");
         // play sound
         onDeath?.Invoke(gameObject);
 

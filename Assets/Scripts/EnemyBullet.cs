@@ -5,16 +5,14 @@ using UnityEngine;
 public class EnemyBullet : MonoBehaviour
 {
     [SerializeField]
-    private LayerMask targetHitLayer;
+    private string targetTag = "Player";
 
     public delegate void OnHit(EnemyBullet bullet, Collider target);
     public static OnHit onHit;
 
     private void OnCollisionEnter(Collision collision)
     {
-        onHit?.Invoke(this, collision.collider);
-
-        if (collision.collider.gameObject.layer == targetHitLayer)
+        if (collision.collider.gameObject.tag == targetTag)
         {
             onHit?.Invoke(this, collision.collider);
         }

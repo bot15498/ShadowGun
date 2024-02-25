@@ -17,7 +17,7 @@ public class EnemyAiBase : MonoBehaviour
 {
     private NavMeshAgent agent;
     [SerializeField]
-    private GameObject player;
+    public GameObject player;
     [SerializeField]
     private EnemyAiType aiType;
     [SerializeField]
@@ -39,6 +39,9 @@ public class EnemyAiBase : MonoBehaviour
     private bool isAlerted = false;
     private bool playedAlertSound = false;
 
+    // Enemy attack stuff
+    private IEnemyActionAi[] enemyActions;
+
     // Audio events
     public delegate void OnAlert(GameObject enemy);
     public static OnAlert onAlert;
@@ -51,6 +54,10 @@ public class EnemyAiBase : MonoBehaviour
             //make it here
             home = transform.position;
         }
+
+        // Get all the enemy actions on this enemy, and sort by max view distance descending
+        enemyActions = GetComponents<IEnemyActionAi>();
+        enemyActions = enemyActions.OrderBy(x => x.MaxActionRange).Reverse().ToArray();
     }
 
     private void Update()
@@ -75,6 +82,23 @@ public class EnemyAiBase : MonoBehaviour
                 break;
             case EnemyAiType.Lazy:
                 // Don't move, just shoot at player.
+                if (CanSeePlayer(maxViewDistance) || canSeeBullet)
+                {
+                    if (!playedAlertSound)
+                    {
+                        onAlert?.Invoke(gameObject);
+                        playedAlertSound = true;
+                    }
+                    isAlerted = true;
+                    DoActionCheck();
+                    FacePlayer();
+                }
+
+                if (isAlerted && !canSeeBullet && !CanSeePlayer())
+                {
+                    // if enemy is alerted, but can't see the player or any bullets, start timer to return home
+                    Invoke("DelayAlertedByPlayer", waitTimeSec);
+                }
                 break;
             case EnemyAiType.Attack:
                 // Stay stationary, and move towards player if you see them.
@@ -111,7 +135,7 @@ public class EnemyAiBase : MonoBehaviour
                 break;
             case EnemyAiType.Patrol:
                 // Use the predefined list of waypoints to move betwen, and if you see player, move towards them.
-                if (CanSeePlayer(maxViewDistance))
+                if (CanSeePlayer(maxViewDistance) || canSeeBullet)
                 {
                     onAlert?.Invoke(gameObject);
                     agent.SetDestination(player.transform.position);
@@ -135,6 +159,36 @@ public class EnemyAiBase : MonoBehaviour
                     }
                 }
                 break;
+        }
+    }
+
+    private void DoActionCheck()
+    {
+        IEnemyActionAi actionToDo = null;
+        foreach (IEnemyActionAi action in enemyActions)
+        {
+            if (action.PlayerInRange(player.transform))
+            {
+                if (actionToDo != null)
+                {
+                    actionToDo.isAgressive = false;
+                }
+                actionToDo = action;
+            }
+        }
+
+        // If we are in range to do something, tell the controller to go do it.
+        if (actionToDo != null)
+        {
+            actionToDo.isAgressive = true;
+        }
+        else
+        {
+            // otherwise turn them all off
+            foreach (IEnemyActionAi action in enemyActions)
+            {
+                action.isAgressive = false;
+            }
         }
     }
 
@@ -208,5 +262,12 @@ public class EnemyAiBase : MonoBehaviour
             isAlerted = false;
             playedAlertSound = false;
         }
+    }
+
+    private void FacePlayer()
+    {
+        Vector3 direction = player.transform.position - transform.position;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Euler(0f, rotation.eulerAngles.y, 0f);
     }
 }
