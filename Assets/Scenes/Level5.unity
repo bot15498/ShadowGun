@@ -375,9 +375,9 @@ GameObject:
   - component: {fileID: 54080148}
   - component: {fileID: 54080147}
   - component: {fileID: 54080146}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cube (3)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3480,9 +3480,9 @@ GameObject:
   - component: {fileID: 137400056}
   - component: {fileID: 137400059}
   - component: {fileID: 137400060}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Gun
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3733,9 +3733,9 @@ GameObject:
   - component: {fileID: 191486375}
   - component: {fileID: 191486374}
   - component: {fileID: 191486373}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cube (5)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4346,7 +4346,7 @@ GameObject:
   - component: {fileID: 229966255}
   m_Layer: 2
   m_Name: Sway
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4511,9 +4511,9 @@ GameObject:
   - component: {fileID: 342135099}
   - component: {fileID: 342135101}
   - component: {fileID: 342135100}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4761,7 +4761,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh152598
+  m_Name: pb_Mesh73080
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -5003,7 +5003,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh152326
+  m_Name: pb_Mesh72810
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -5306,9 +5306,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 600272374}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Throwpoint
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5569,9 +5569,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 617971388}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Barrel
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5602,9 +5602,9 @@ GameObject:
   - component: {fileID: 671929802}
   - component: {fileID: 671929804}
   - component: {fileID: 671929803}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (3)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5979,7 +5979,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh152366
+  m_Name: pb_Mesh72850
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -6452,7 +6452,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh152564
+  m_Name: pb_Mesh73046
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -6993,9 +6993,9 @@ GameObject:
   - component: {fileID: 991994584}
   - component: {fileID: 991994583}
   - component: {fileID: 991994582}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cube (8)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10233,9 +10233,9 @@ GameObject:
   - component: {fileID: 1092229018}
   - component: {fileID: 1092229017}
   - component: {fileID: 1092229016}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cube (6)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10800,9 +10800,9 @@ GameObject:
   - component: {fileID: 1101594846}
   - component: {fileID: 1101594848}
   - component: {fileID: 1101594847}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cube (5)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11855,9 +11855,9 @@ GameObject:
   - component: {fileID: 1537901426}
   - component: {fileID: 1537901425}
   - component: {fileID: 1537901424}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BarrelModel
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13551,7 +13551,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh152854
+  m_Name: pb_Mesh73334
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -13799,9 +13799,9 @@ GameObject:
   - component: {fileID: 2030970470}
   - component: {fileID: 2030970469}
   - component: {fileID: 2030970468}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cube (3)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
