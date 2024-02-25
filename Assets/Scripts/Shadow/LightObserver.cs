@@ -54,11 +54,11 @@ public class LightObserver : MonoBehaviour
 
         // draw raycast to see if you hit the player
         Vector3 playerDirection = pointToLookAt - transform.position;
-        Debug.DrawRay(transform.position, playerDirection);
+        //Debug.DrawRay(transform.position, playerDirection);
         RaycastHit hit;
         if (Physics.Raycast(transform.position, playerDirection, out hit, maxDistance, layerMask))
         {
-            Debug.Log(hit.collider.gameObject);
+            //Debug.Log(hit.collider.gameObject);
             if (hit.collider.gameObject == point)
             {
                 return true;

@@ -275,7 +275,10 @@ public class ShadowObject : MonoBehaviour
         if (shadowMap.TryGetValue(light, out toDelete))
         {
             shadowMap.Remove(light);
-            Destroy(toDelete.shadowTransform.gameObject);
+            if(toDelete.shadowTransform != null)
+            {
+                Destroy(toDelete.shadowTransform.gameObject);
+            }
         }
     }
 

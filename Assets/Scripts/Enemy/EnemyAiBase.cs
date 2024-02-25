@@ -212,7 +212,7 @@ public class EnemyAiBase : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, playerDirection, out hit, Mathf.Infinity, playerLayerMask))
         {
-            if (hit.collider.gameObject.name == "Player" && (hit.point - transform.position).magnitude < maxView)
+            if (hit.collider.gameObject.tag == "Player" && (hit.point - transform.position).magnitude < maxView)
             {
                 return true;
             }
@@ -251,6 +251,8 @@ public class EnemyAiBase : MonoBehaviour
             Vector3 playerDirection = player.transform.position - transform.position;
             Gizmos.DrawRay(transform.position, playerDirection);
         }
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, maxViewDistance);
     }
 
     private IEnumerator DelayIndexIncrease(float seconds)
