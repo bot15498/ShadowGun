@@ -12,7 +12,7 @@ public class EnemyBullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.collider.gameObject.tag);
+        Debug.Log($"Enemy Bullet hit: {collision.collider.gameObject.tag}");
         if (collision.collider.gameObject.tag == targetTag)
         {
             onHit?.Invoke(this, collision.collider);

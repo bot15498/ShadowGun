@@ -10,11 +10,12 @@ public class EnemyMelee : MonoBehaviour
     public delegate void OnHit(EnemyMelee bat, Collider target);
     public static OnHit onHit;
 
-    private void OnTriggerEnter(Collider collider)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collider.gameObject.tag == targetTag)
+        Debug.Log($"Enemy Melee hit: {other.gameObject.tag}");
+        if (other.gameObject.tag == targetTag)
         {
-            onHit?.Invoke(this, collider);
+            onHit?.Invoke(this, other);
         }
     }
 }

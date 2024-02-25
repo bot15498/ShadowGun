@@ -2,13 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EnemyHP : MonoBehaviour {
+public class EnemyHP : MonoBehaviour
+{
     private ShadowObject shadowObject;
 
     public delegate void OnDeath(GameObject enemy);
     public static OnDeath onDeath;
 
-    private void Awake() {
+    private void Awake()
+    {
         PlayerBullet.onHit += TakeDamage; // Listen to bullet collision event
     }
 
@@ -17,11 +19,12 @@ public class EnemyHP : MonoBehaviour {
         shadowObject = GetComponent<ShadowObject>();
     }
 
-    private void TakeDamage(PlayerBullet bullet, Collider shadowTarget) {
+    private void TakeDamage(PlayerBullet bullet, Collider shadowTarget)
+    {
         List<MeshCollider> currColliders = shadowObject.shadowMap.Values.Select(x => x.shadowCollider).ToList();
-        foreach(MeshCollider collider in currColliders)
+        foreach (MeshCollider collider in currColliders)
         {
-            if(shadowTarget == collider)
+            if (shadowTarget == collider)
             {
                 // Kill bullet
                 Destroy(bullet.gameObject);
@@ -30,11 +33,20 @@ public class EnemyHP : MonoBehaviour {
                 onDeath?.Invoke(gameObject);
 
                 // Prepare enemy for death
+                // Kill all the children
+                for (int i = 0; i < transform.childCount; i++)
+                {
+                    ShadowObject currChild = transform.GetChild(i).gameObject.GetComponent<ShadowObject>();
+                    if (currChild != null)
+                    {
+                        StartCoroutine(currChild.DestroyEntity(null));
+                    }
+                }
                 StartCoroutine(shadowObject.DestroyEntity(collider.gameObject));
 
                 // Kill this current shadow
                 DestroyShadow shadowScript = collider.gameObject.GetComponent<DestroyShadow>();
-                if(shadowScript != null)
+                if (shadowScript != null)
                 {
                     StartCoroutine(shadowScript.DestroyMesh());
                 }
