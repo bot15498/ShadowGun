@@ -58,7 +58,6 @@ public class DestroyShadow : MonoBehaviour
             materials = GetComponent<SkinnedMeshRenderer>().materials;
         }
 
-        // Temporarily move the object upwards.
         Vector3[] verts = M.vertices;
         Vector3[] normals = M.normals;
         for (int submesh = 0; submesh < M.subMeshCount; submesh++)
@@ -66,13 +65,15 @@ public class DestroyShadow : MonoBehaviour
 
             int[] indices = M.GetTriangles(submesh);
 
-            for (int i = 0; i < indices.Length; i += 3)
+            int numVerticesPerParticle = 6;
+            // Loop over all triangles in groups of numVerticesPerParticle
+            for (int i = numVerticesPerParticle-1; i < indices.Length; i += numVerticesPerParticle)
             {
-                Vector3[] newVerts = new Vector3[3];
-                Vector3[] newNormals = new Vector3[3];
-                for (int n = 0; n < 3; n++)
+                Vector3[] newVerts = new Vector3[numVerticesPerParticle];
+                Vector3[] newNormals = new Vector3[numVerticesPerParticle];
+                for (int n = 0; n < numVerticesPerParticle; n++)
                 {
-                    int index = indices[i + n];
+                    int index = indices[i - n];
                     newVerts[n] = verts[index];
                     newNormals[n] = normals[index];
                 }
@@ -81,12 +82,22 @@ public class DestroyShadow : MonoBehaviour
                 mesh.vertices = newVerts;
                 mesh.normals = newNormals;
 
-                mesh.triangles = new int[] { 0, 1, 2, 2, 1, 0 };
+                mesh.triangles = new int[] { 0, 1, 2, 
+                                            1, 2, 3,
+                                            2, 3, 4,
+                                            0, 2, 4,
+                                            3, 4, 5,
+
+                                            5, 4, 3,
+                                            4, 2, 0,
+                                            4, 3, 2,
+                                            3, 2, 1, 
+                                            2, 1, 0 };
 
                 mesh.RecalculateBounds();
                 mesh.RecalculateNormals();
 
-                GameObject GO = new GameObject("Triangle " + (i / 3));
+                GameObject GO = new GameObject("Triangle " + (i / numVerticesPerParticle));
                 GO.layer = LayerMask.NameToLayer("ShadowParticle");
                 GO.transform.position = transform.position;
                 GO.transform.rotation = transform.rotation;
