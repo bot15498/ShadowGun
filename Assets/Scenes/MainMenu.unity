@@ -2624,6 +2624,7 @@ GameObject:
   m_Component:
   - component: {fileID: 472192880}
   - component: {fileID: 472192879}
+  - component: {fileID: 472192881}
   m_Layer: 0
   m_Name: SettingsManager
   m_TagString: Settingsmanager
@@ -2658,6 +2659,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &472192881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472192878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 400b809615440c842ba0937e7183d6e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  music: {fileID: 8300000, guid: 440ae976c0c529a40b959479e4662f74, type: 3}
 --- !u!1 &473257549
 GameObject:
   m_ObjectHideFlags: 0
