@@ -15,8 +15,6 @@ public class EnemyMeleeAi : MonoBehaviour, IEnemyActionAi
 
     // swing range and rate
     [SerializeField]
-    private float swingRange = 2f;
-    [SerializeField]
     private float swingRangeSec = 1.0f;
     [SerializeField]
     private float swingTimer = 0f;
