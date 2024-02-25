@@ -175,8 +175,8 @@ public class ShadowObject : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
 
-        // Destroy self.
-        Destroy(gameObject);
+        // Destroy ~~self~~.the parent
+        Destroy(transform.parent.gameObject);
     }
 
     private ShadowHolder InitializeShadowCollider()
@@ -218,7 +218,7 @@ public class ShadowObject : MonoBehaviour
     private IEnumerator UpdateShadowCollider(LightObserver light, ShadowHolder shadow, float delay)
     {
         yield return new WaitForSeconds(delay);
-        if (!isdoomed)
+        if (!isdoomed && light != null)
         {
             shadow.shadowColliderMesh.vertices = ComputeShadowColliderMeshVertices(light);
             shadow.shadowColliderMesh.triangles = objectTris;

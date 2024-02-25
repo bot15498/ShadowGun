@@ -12441,6 +12441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a24854d7fe0567243a66fb469effafc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pointToLookAt: {fileID: 0}
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 512
@@ -12464,6 +12465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d7a3ad6bb2279d47815ab685a4230dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 0}
   player: {fileID: 0}
   aiType: 0
   home: {x: 0, y: 0, z: 0}
@@ -12584,6 +12586,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe303ea460a90944ac8845b2d72723c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 1
+  health: 2
 --- !u!195 &3006395731679900666
 NavMeshAgent:
   m_ObjectHideFlags: 0
