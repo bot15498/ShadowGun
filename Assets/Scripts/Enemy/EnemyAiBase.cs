@@ -268,6 +268,6 @@ public class EnemyAiBase : MonoBehaviour
     {
         Vector3 direction = player.transform.position - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Euler(0f, rotation.eulerAngles.y, 0f);
+        transform.rotation = Quaternion.Euler(0f, rotation.eulerAngles.y + 90, 0f);
     }
 }

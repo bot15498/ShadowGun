@@ -39,7 +39,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3006395731679900664
 MonoBehaviour:
@@ -12445,15 +12445,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   extrusion: 0.05
+  maxShadowDistance: 500
   shadowMaterialNormal: {fileID: 2100000, guid: 9cb4b3351f9ea574db2fe4eb3ef29794, type: 2}
   shadowMaterialOpaque: {fileID: 2100000, guid: 89404d75a277f5e44b56b095ae2bc769, type: 2}
   enemyMaterialOpaque: {fileID: 2100000, guid: 4987f0cc8f3430d468b4dd6bcf60cdd3, type: 2}
   objectVertices: []
   objectTris: 
-  shadowBreakSounds:
-  - {fileID: 8300000, guid: 274d6ef02247abc4088093914e1f4881, type: 3}
-  - {fileID: 8300000, guid: 5280d7d074d63644ab6739da79121bd9, type: 3}
-  - {fileID: 8300000, guid: 4f882c01cd7e871469c15000e8529bdd, type: 3}
   shadowColliderUpdateTime: 0.02
 --- !u!114 &3006395731679900642
 MonoBehaviour:

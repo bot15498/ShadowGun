@@ -55,4 +55,4 @@ sysinfo.txt
 *.ss
 HueySoftPizza/Assets/Stories/asdf.txt.meta
 HueySoftPizza/Assets/Stories/asdf.txt
-com.unity.probuilder/*
+**/com.unity.probuilder/*

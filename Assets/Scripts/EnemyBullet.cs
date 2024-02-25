@@ -16,6 +16,9 @@ public class EnemyBullet : MonoBehaviour
         if (collision.collider.gameObject.tag == targetTag)
         {
             onHit?.Invoke(this, collision.collider);
+
+            // delete self;
+            Destroy(gameObject);
         }
     }
 }

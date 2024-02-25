@@ -19,7 +19,7 @@ public class EnemyShootAi : MonoBehaviour, IEnemyActionAi
     [SerializeField]
     private GameObject bullet;
     [SerializeField]
-    private Transform shootPoint;
+    private List<Transform> shootPoints;
 
     // Shoot range and rate
     [SerializeField]
@@ -59,11 +59,23 @@ public class EnemyShootAi : MonoBehaviour, IEnemyActionAi
 
     private void Shoot()
     {
+        // pick random point to shoot out
+        Vector3 shootpoint;
+        if (shootPoints.Count == 1)
+        {
+            // small optimization if you only have one point
+            shootpoint = shootPoints[0].position;
+        }
+        else
+        {
+            shootpoint = shootPoints[Random.Range(0, shootPoints.Count)].position;
+        }
+
         // Create bullet and shoot it in the direction of the player
-        Vector3 direction = aiBase.player.transform.position - shootPoint.position;
+        Vector3 direction = aiBase.player.transform.position - shootpoint;
         //Quaternion playerRotation = Quaternion.FromToRotation(shootPoint.position, aiBase.player.transform.position);
         Quaternion playerRotation = Quaternion.LookRotation(direction, Vector3.up);
-        GameObject newBullet = Instantiate(bullet, shootPoint.position, playerRotation);
+        GameObject newBullet = Instantiate(bullet, shootpoint, playerRotation);
 
         // PLay sound
         onEnemyFire?.Invoke();
