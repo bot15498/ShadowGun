@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum ExitLevelCondition
 {
@@ -12,6 +13,8 @@ public enum ExitLevelCondition
 public class DeathManager : MonoBehaviour
 {
     public ExitLevelCondition exitLevelCondition;
+    public GameObject wintext;
+    SceneLoader sl;
 
     // kill everyone
     [SerializeField]
@@ -25,6 +28,7 @@ public class DeathManager : MonoBehaviour
 
     void Start()
     {
+        sl = GetComponent<SceneLoader>();
         switch (exitLevelCondition)
         {
             case ExitLevelCondition.KillAllEnemies:
@@ -62,6 +66,15 @@ public class DeathManager : MonoBehaviour
 
     private void YouWin()
     {
+        wintext.SetActive(true);
+        StartCoroutine(Example2());
+    }
+
+    IEnumerator Example2()
+    {
+
+        yield return new WaitForSeconds(1.5f);
+        sl.loadScene();
 
     }
 }
