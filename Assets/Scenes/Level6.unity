@@ -4529,8 +4529,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 00.000
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 944833a2f8b201944a307e649168aa20, type: 2}
-  m_sharedMaterial: {fileID: -3722817680835605720, guid: 944833a2f8b201944a307e649168aa20, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 435115d0ff14fd44a8312cbdf5d8d17f, type: 2}
+  m_sharedMaterial: {fileID: -3722817680835605720, guid: 435115d0ff14fd44a8312cbdf5d8d17f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5493,6 +5493,7 @@ GameObject:
   m_Component:
   - component: {fileID: 492562084}
   - component: {fileID: 492562083}
+  - component: {fileID: 492562085}
   m_Layer: 0
   m_Name: DeathManager
   m_TagString: Untagged
@@ -5533,6 +5534,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &492562085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492562082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 537db67eb0e42ba4eb21ecb032616d8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 1221641497}
+  SceneToLoad: 8
 --- !u!1001 &525437841
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12696,7 +12711,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objtextobject: {fileID: 595419287}
   objtext: {fileID: 0}
-  destroyallshadows: 1
+  destroyallshadows: 0
 --- !u!1 &1499861485
 GameObject:
   m_ObjectHideFlags: 0
@@ -12735,7 +12750,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: U killed them all
+  m_text: U Lived
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 944833a2f8b201944a307e649168aa20, type: 2}
   m_sharedMaterial: {fileID: -3722817680835605720, guid: 944833a2f8b201944a307e649168aa20, type: 2}

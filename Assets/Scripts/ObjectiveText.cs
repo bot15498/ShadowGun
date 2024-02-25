@@ -20,8 +20,14 @@ public class ObjectiveText : MonoBehaviour
         if(destroyallshadows == true)
         {
             StartCoroutine(Example());
-            
-           
+
+
+        }
+        else
+        {
+            objtextobject.SetActive(true);
+            objtext.text = "SURVIVE";
+            StartCoroutine(Example2());
         }
     }
 
@@ -36,6 +42,14 @@ public class ObjectiveText : MonoBehaviour
         yield return new WaitForSeconds(1f);
         objtext.text = "Shadows";
         yield return new WaitForSeconds(1f);
+        objtextobject.SetActive(false);
+
+    }
+
+    IEnumerator Example2()
+    {
+
+        yield return new WaitForSeconds(3f);
         objtextobject.SetActive(false);
 
     }
