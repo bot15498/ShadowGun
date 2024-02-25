@@ -26,6 +26,8 @@ public class PlayerHP : MonoBehaviour
 
     void Start()
     {
+        EnemyBullet.onHit = null;
+        EnemyMelee.onHit = null;
         EnemyBullet.onHit += TakeDamage; // Listen to bullet collision event from an enemy bullet
         EnemyMelee.onHit += TakeDamage;
         health = maxHealth;
