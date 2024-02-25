@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +15,7 @@ public class DeathManager : MonoBehaviour
 {
     public ExitLevelCondition exitLevelCondition;
     public GameObject wintext;
+    public TextMeshProUGUI timerText;
     SceneLoader sl;
 
     // kill everyone
@@ -55,8 +57,9 @@ public class DeathManager : MonoBehaviour
                 break;
             case ExitLevelCondition.Survive:
                 // live for certain time
-                currentLiveTime += Time.deltaTime;
-                if (currentLiveTime >= timeToLiveSec)
+                currentLiveTime -= Time.deltaTime;
+                timerText.text = currentLiveTime.ToString("00.000");
+                if (currentLiveTime <= 0)
                 {
                     YouWin();
                 }

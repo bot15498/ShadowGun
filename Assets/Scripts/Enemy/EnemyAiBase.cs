@@ -20,13 +20,13 @@ public class EnemyAiBase : MonoBehaviour
     [SerializeField]
     public GameObject player;
     [SerializeField]
-    private EnemyAiType aiType;
+    public EnemyAiType aiType;
     [SerializeField]
     private Vector3 home;
     [SerializeField]
     private LayerMask playerLayerMask;
     [SerializeField]
-    private float maxViewDistance = 20f;
+    public float maxViewDistance = 20f;
     [SerializeField]
     private Transform[] waypoints;
     [SerializeField]

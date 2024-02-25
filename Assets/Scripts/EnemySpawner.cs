@@ -13,7 +13,11 @@ public class EnemySpawner : MonoBehaviour
     private int maxNumEnemies = 5;
     [SerializeField]
     private List<GameObject> currEnemies = new List<GameObject>();
+    [SerializeField]
     private Vector3[] spawnLimits;
+
+    private float respawnCheck = 2f;
+    private float currRespawnCheck = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -27,8 +31,20 @@ public class EnemySpawner : MonoBehaviour
         if (currEnemies.Count < maxNumEnemies)
         {
             GameObject enemy = enemiesToInstantiate[Random.Range(0, enemiesToInstantiate.Count)];
-            currEnemies.Add(Instantiate(enemy, PickSpawnPoint(), Quaternion.identity));
+            currEnemies.Add(Instantiate(enemy, PickSpawnPoint(), Quaternion.identity).transform.GetChild(0).gameObject);
+
+            EnemyAiBase aiBase = enemy.transform.GetChild(0).GetComponent<EnemyAiBase>();
+            aiBase.maxViewDistance = 9999f;
+            aiBase.aiType = EnemyAiType.Attack;
         }
+
+        if (currRespawnCheck >= respawnCheck)
+        {
+            currEnemies = currEnemies.Where(x => x != null).ToList();
+            currRespawnCheck = 0;
+        }
+
+        currRespawnCheck += Time.deltaTime;
     }
 
     private Vector3 PickSpawnPoint()
@@ -44,6 +60,11 @@ public class EnemySpawner : MonoBehaviour
     {
         Mesh spawnMesh = spawnRegion.mesh;
         Vector3[] vertices = spawnMesh.vertices;
+        for(int i=1; i< vertices.Length; i++)
+        {
+            vertices[i] = transform.TransformPoint(vertices[i]);
+        }
+        
 
         float targetY = vertices.Max(x => x.y);
         vertices = vertices.Where(x => x.y == targetY).OrderBy(x => x.x).OrderBy(x => x.z).ToArray();
