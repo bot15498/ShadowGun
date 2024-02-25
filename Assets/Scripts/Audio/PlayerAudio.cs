@@ -12,13 +12,13 @@ public class PlayerAudio : MonoBehaviour
     private AudioSource stepPlayer;
 
     // footstep behavior
-    private float ticksMoved = 0f;
+    private float secsToStep = 0.38f;
 
     // CONSTANTS TO CONFIG FOOTSTEP BEHAVIOR
     private readonly float SECS_PER_STEP = 0.4f;
     private readonly float SECS_PER_RUN = 0.2f;
-    private readonly float START_DEADZONE = 0.1f;
-    private readonly float STOP_DEADZONE = 0.5f;
+    private readonly float DEADZONE = 0.5f;
+    private readonly float HEADSTART = 0.38f;
 
     private void Start() {
         inputManager = transform.parent.GetComponent<PlayerInput>();
@@ -36,22 +36,20 @@ public class PlayerAudio : MonoBehaviour
     }
 
     private void Update() {
-        Debug.Log(inputManager.input.magnitude);
-
         // Footsteps
-        if (inputManager?.input.magnitude < STOP_DEADZONE) {
-            stepPlayer.Stop();
-        }
-        else if (inputManager?.input.magnitude > START_DEADZONE) {
-            ticksMoved += Time.deltaTime;
+        if (inputManager?.input.magnitude > DEADZONE) {
+            secsToStep += Time.deltaTime;
 
             if (inputManager.run) {
-                if (ticksMoved >= SECS_PER_RUN)
+                if (secsToStep >= SECS_PER_RUN)
                     PlayStep();
             } else {
-                if (ticksMoved >= SECS_PER_STEP)
+                if (secsToStep >= SECS_PER_STEP)
                     PlayStep();
             }
+        } else {
+            stepPlayer.Stop();
+            secsToStep = HEADSTART;
         }
     }
 
@@ -61,7 +59,7 @@ public class PlayerAudio : MonoBehaviour
         stepPlayer.pitch = Random.Range(pitchMin.Percent, pitchMax.Percent);
         stepPlayer.clip = step[Random.Range(0, step.Length)];
         stepPlayer.Play();
-        ticksMoved = 0f;
+        secsToStep = 0f;
     }
 
     IEnumerator OneShot(
